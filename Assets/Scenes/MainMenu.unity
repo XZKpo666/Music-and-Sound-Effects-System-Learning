@@ -444,6 +444,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4078033296739544033, guid: 01b32f3d2f9415a4b9a1f60cec1c4fb5, type: 3}
     - target: {fileID: 3475566479980243856, guid: 23254a4843a073943a24a7d6f80da1bd, type: 3}
+      propertyPath: _audioPrefab
+      value: 
+      objectReference: {fileID: 5313263995835969531, guid: 01b32f3d2f9415a4b9a1f60cec1c4fb5, type: 3}
+    - target: {fileID: 3475566479980243856, guid: 23254a4843a073943a24a7d6f80da1bd, type: 3}
       propertyPath: _audioObjectPrefab
       value: 
       objectReference: {fileID: 4078033296739544033, guid: 01b32f3d2f9415a4b9a1f60cec1c4fb5, type: 3}

@@ -56,6 +56,6 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Music and Sound Effects System Learning.sln",
+    "dotnet.defaultSolution": "Music-and-Sound-Effects-System-Learning.sln",
     "editor.wordWrap": "on"
 }

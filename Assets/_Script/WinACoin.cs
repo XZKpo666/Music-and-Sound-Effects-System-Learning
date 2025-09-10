@@ -14,7 +14,7 @@ public class WinACoin : MonoBehaviour
                 Debug.Log("AudioManager not found in ServiceLocator.");
                 return;
             }
-            else audioManager.PlaySoundEffects(0); // Assuming 0 is the ID for the coin sound
+            else audioManager.PlaySoundEffects("0"); // Assuming 0 is the ID for the coin sound
             Destroy(collision.gameObject);
         }
     }

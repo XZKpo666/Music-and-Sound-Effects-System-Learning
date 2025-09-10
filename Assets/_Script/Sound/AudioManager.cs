@@ -7,9 +7,9 @@ public class AudioManager : MonoBehaviour, IGameService
 {   
     [SerializeField] private SoundEffects[] _soundEffects;
     [SerializeField] private BackgroundMusic[] _backgroundMusic;
-    [SerializeField] private GameObject _audioObjectPrefab;
+    [SerializeField] private AudioSource _audioPrefab;
     public float FadeDuration = 1f; // 音量淡出持續時間
-    private GameObject _oldAudioObject;
+    private AudioSource _oldAudioSource;
 
     private void Awake()
     {  
@@ -18,32 +18,44 @@ public class AudioManager : MonoBehaviour, IGameService
         ServiceLocator.Instance.RegisterService<AudioManager>(this, false);
     }
 
-    public void PlaySoundEffects(int id)
-    {      
-        GameObject audioObject = Instantiate(_audioObjectPrefab);
-        SoundEffects soundEffect = Array.Find(_soundEffects, sound => sound.Id == id);   
-        AudioSource audioSource =  audioObject.AddComponent<AudioSource>();
-        audioSource.clip = soundEffect.AudioCilp;
-        audioSource.volume = soundEffect.Volume;
-        audioSource.pitch = soundEffect.Pitch;
-        audioSource.loop = soundEffect.Loop;        
+    public void PlaySoundEffects(string id)
+    {
+        SoundEffects soundEffect = Array.Find(_soundEffects, sound => sound.Id == id);
+        AudioSource audioSource = Instantiate(_audioPrefab);
 
+        IsSoundEffectExist(soundEffect);
+        SetSoundEffect(audioSource, soundEffect);
+        RandomSoundEffectsValue(audioSource, soundEffect);
+        audioSource.Play();   
+        StartCoroutine(DestroyAfterSoundEffect(audioSource));
+    }
+    private void IsSoundEffectExist(SoundEffects soundEffect)
+    {
         if (soundEffect == null)
         {
             Debug.LogWarning("Sound Effect: " + name + " not found!");
             return;
         }
-
-        RandomSoundEffects(audioSource, soundEffect.MinVolume, soundEffect.MaxVolume, soundEffect.MinPitch, soundEffect.MaxPitch);
-        audioSource.Play();
-        StartCoroutine(DestroyAfterSound(audioObject, audioSource));
     }
 
-    public void PlayBackgroundMusic(int id)
+    private void SetSoundEffect(AudioSource audioSource, SoundEffects soundEffect)
     {
-        GameObject audioObject = Instantiate(_audioObjectPrefab);
+        audioSource.clip = soundEffect.AudioCilp;
+        audioSource.volume = soundEffect.Volume;
+        audioSource.pitch = soundEffect.Pitch;
+        audioSource.loop = soundEffect.Loop;
+    }
+
+    private void RandomSoundEffectsValue(AudioSource audioSource, SoundEffects soundEffect)
+    {            
+        audioSource.volume = UnityEngine.Random.Range(soundEffect.MinVolume, soundEffect.MaxVolume);
+        audioSource.pitch = UnityEngine.Random.Range(soundEffect.MinPitch, soundEffect.MaxPitch);     
+    }
+
+    public void PlayBackgroundMusic(string id)
+    {
+        AudioSource audioSource = Instantiate(_audioPrefab);
         BackgroundMusic backgroundMusic = Array.Find(_backgroundMusic, sound => sound.Id == id);
-        AudioSource audioSource = audioObject.AddComponent<AudioSource>();
         audioSource.clip = backgroundMusic.AudioCilp;
         audioSource.volume = backgroundMusic.Volume;
         audioSource.pitch = backgroundMusic.Pitch;
@@ -55,47 +67,40 @@ public class AudioManager : MonoBehaviour, IGameService
             return;
         }
 
-        if (_oldAudioObject != null)
+        if (_oldAudioSource != null)
         {
-            StartCoroutine(FadeOutMusicAndDestroy(_oldAudioObject));
+            StartCoroutine(FadeOutMusicAndDestroy(_oldAudioSource));
         }
         
         StartCoroutine(FadeInMusic(audioSource));
         
-        _oldAudioObject = audioObject; 
+        _oldAudioSource = audioSource; 
     }
 
-    private void RandomSoundEffects(AudioSource audioSource, float minVolume, float maxVolume, float minPitch, float maxPitch)
-    {             
-        audioSource.volume = UnityEngine.Random.Range(minVolume, maxVolume);
-        audioSource.pitch = UnityEngine.Random.Range(minPitch, maxPitch);     
-    }
-
-    private IEnumerator DestroyAfterSound(GameObject gameObject, AudioSource audioSource)
+    private IEnumerator DestroyAfterSoundEffect(AudioSource audioSource)
     {
         while (audioSource.isPlaying)
         {
             yield return null;
         }
-        Destroy(gameObject);
+        Destroy(audioSource);
     }
     
-    private IEnumerator FadeOutMusicAndDestroy(GameObject oldMusicObject)
+    private IEnumerator FadeOutMusicAndDestroy(AudioSource oldMusicSource)
     {
-        if (oldMusicObject == null)
+        if (oldMusicSource == null)
         {
             yield break;
         }
         
-        AudioSource oldMusic = oldMusicObject.GetComponent<AudioSource>();
-        float startVolume = oldMusic.volume;
+        float startVolume = oldMusicSource.volume;
         for (float t = 0; t < FadeDuration; t += Time.deltaTime)
         {
-            oldMusic.volume = Mathf.Lerp(startVolume, 0, t / FadeDuration);
+            oldMusicSource.volume = Mathf.Lerp(startVolume, 0, t / FadeDuration);
             yield return null;
         }
-        oldMusic.Stop();
-        Destroy(oldMusicObject); // 銷毀舊音樂物件
+        oldMusicSource.Stop();
+        Destroy(oldMusicSource); // 銷毀舊音樂物件
     }
 
     private IEnumerator FadeInMusic(AudioSource newMusic)

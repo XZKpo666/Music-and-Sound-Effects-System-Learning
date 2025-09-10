@@ -4,7 +4,7 @@ using UnityEngine;
 [System.Serializable]
 public class SoundEffects 
 {
-    public int Id;
+    public string Id;
 
     public AudioClip AudioCilp;
 
