@@ -9,25 +9,16 @@ public class LevelLoader : MonoBehaviour
     public float _transitionTime = 1f; 
     private int _levelIndex;
 
-    private void Update()
-    {
-        if(Input.GetMouseButtonDown(0))
-        {
-            LoadLevel();
-        }
-    }
-
-
-    private void LoadLevel()
+    public void LoadLevel()
     {
         _levelIndex = SceneManager.GetActiveScene().buildIndex; 
-        if (_levelIndex == 0)
+        if (_levelIndex == 2)
         {
-            _levelIndex = 1; 
+            _levelIndex = 0; 
         }
         else
         {
-            _levelIndex--;
+            _levelIndex++;
         }     
         StartCoroutine(LoadLevelWithDelay(_levelIndex, _transitionTime));
     }
