@@ -7,7 +7,8 @@ public class AudioManager : MonoBehaviour, IGameService
 {   
     [SerializeField] private SoundEffects[] _soundEffects;
     [SerializeField] private BackgroundMusic[] _backgroundMusic;
-    [SerializeField] private AudioSource _audioPrefab;
+    [SerializeField] private AudioSource _audioSourcePrefab;
+    [SerializeField] private AudioMixer _volumeMixer;
     public float FadeDuration = 1f; // 音量淡出持續時間
     private AudioSource _oldAudioSource;
 
@@ -21,7 +22,8 @@ public class AudioManager : MonoBehaviour, IGameService
     public void PlaySoundEffects(string id)
     {
         SoundEffects soundEffect = Array.Find(_soundEffects, sound => sound.Id == id);
-        AudioSource audioSource = Instantiate(_audioPrefab);
+        AudioSource audioSource = Instantiate(_audioSourcePrefab);
+        audioSource.outputAudioMixerGroup = _volumeMixer.FindMatchingGroups("SFX")[0];
 
         IsSoundEffectExist(soundEffect);
         SetSoundEffect(audioSource, soundEffect);
@@ -53,7 +55,7 @@ public class AudioManager : MonoBehaviour, IGameService
         audioSource.pitch = UnityEngine.Random.Range(soundEffect.MinPitch, soundEffect.MaxPitch);     
     }
     
-        private IEnumerator DestroyAfterSoundEffect(AudioSource audioSource)
+    private IEnumerator DestroyAfterSoundEffect(AudioSource audioSource)
     {
         while (audioSource.isPlaying)
         {
@@ -65,7 +67,8 @@ public class AudioManager : MonoBehaviour, IGameService
     public void PlayBackgroundMusic(string id)
     {
         BackgroundMusic backgroundMusic = Array.Find(_backgroundMusic, sound => sound.Id == id);
-        AudioSource audioSource = Instantiate(_audioPrefab);
+        AudioSource audioSource = Instantiate(_audioSourcePrefab);
+        audioSource.outputAudioMixerGroup = _volumeMixer.FindMatchingGroups("Music")[0];
 
         IsBackgroundMusicExist(backgroundMusic);
         IsOldBackgroundMusic(_oldAudioSource);

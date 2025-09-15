@@ -12,14 +12,11 @@ public class LevelLoader : MonoBehaviour
     public void LoadLevel()
     {
         _levelIndex = SceneManager.GetActiveScene().buildIndex; 
-        if (_levelIndex == 2)
+        if (_levelIndex == 1)
         {
-            _levelIndex = 0; 
-        }
-        else
-        {
-            _levelIndex++;
-        }     
+            _levelIndex = 0;
+        }    
+        _levelIndex++;
         StartCoroutine(LoadLevelWithDelay(_levelIndex, _transitionTime));
     }
 

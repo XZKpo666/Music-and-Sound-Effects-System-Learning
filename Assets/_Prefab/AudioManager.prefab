@@ -46,21 +46,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _soundEffects:
   - Id: 0
-    AudioCilp: {fileID: 0}
-    Volume: 0
-    MinVolume: 0
-    MaxVolume: 0
-    Pitch: 0
-    MinPitch: 0
-    MaxPitch: 0
+    AudioCilp: {fileID: 8300000, guid: 701d013b8c24cfa498edc711520b4adb, type: 3}
+    Volume: 0.1
+    MinVolume: 0.05
+    MaxVolume: 0.1
+    Pitch: 1
+    MinPitch: 0.5
+    MaxPitch: 1.5
     Loop: 0
-    Source: {fileID: 0}
   _backgroundMusic:
   - Id: 0
-    AudioCilp: {fileID: 0}
-    Volume: 0
-    Pitch: 0
-    Loop: 0
-    Source: {fileID: 0}
-  AudioObject: {fileID: 4078033296739544033, guid: 01b32f3d2f9415a4b9a1f60cec1c4fb5, type: 3}
+    AudioCilp: {fileID: 8300000, guid: eb37511172df73147b4e24954fe9ee25, type: 3}
+    Volume: 0.2
+    Pitch: 1
+    Loop: 1
+  - Id: 0
+    AudioCilp: {fileID: 8300000, guid: df7f14925e5b2324f98107fe96d5720c, type: 3}
+    Volume: 0.2
+    Pitch: 1
+    Loop: 1
+  _audioSourcePrefab: {fileID: 5313263995835969531, guid: 01b32f3d2f9415a4b9a1f60cec1c4fb5, type: 3}
+  _volumeMixer: {fileID: 24100000, guid: 4d8720dc56027384c9a0e7fe41fb7f16, type: 2}
   FadeDuration: 1
