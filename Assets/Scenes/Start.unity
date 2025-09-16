@@ -513,10 +513,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 551165789}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eed6c84470a8e3e45a9803ded0cf0d87, type: 3}
+  m_Script: {fileID: 11500000, guid: 0aedfea8786c6224bb8d92caf29b31dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _optionsCanvasPrefab: {fileID: 7635162312600794543, guid: 47e7503db4f68a6408af42957da8f6cd, type: 3}
+  _openOptions: {fileID: 1443908959}
 --- !u!1 &818664743
 GameObject:
   m_ObjectHideFlags: 0
@@ -1090,19 +1091,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1443908960}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 551165794}
-        m_TargetAssemblyTypeName: OpenOptions, Assembly-CSharp
-        m_MethodName: Open
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1443908960
 MonoBehaviour:
   m_ObjectHideFlags: 0

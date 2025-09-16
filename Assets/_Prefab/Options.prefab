@@ -560,7 +560,7 @@ MonoBehaviour:
   m_MinValue: 0.0001
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.421
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -697,7 +697,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6217099722518395342}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: OpenOptions, Assembly-CSharp
         m_MethodName: Close
         m_Mode: 1
@@ -868,7 +868,7 @@ MonoBehaviour:
   m_MinValue: 0.0001
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.421
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -1570,7 +1570,7 @@ MonoBehaviour:
   m_MinValue: 0.0001
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.109
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -1673,7 +1673,7 @@ GameObject:
   - component: {fileID: 481564349870782734}
   - component: {fileID: 7898858908095783470}
   - component: {fileID: 4883572687216901187}
-  - component: {fileID: 6217099722518395342}
+  - component: {fileID: 1878824009637628046}
   m_Layer: 5
   m_Name: Options
   m_TagString: Untagged
@@ -1767,7 +1767,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &6217099722518395342
+--- !u!114 &1878824009637628046
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1776,9 +1776,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 7635162312600794543}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eed6c84470a8e3e45a9803ded0cf0d87, type: 3}
+  m_Script: {fileID: 11500000, guid: b694f8f281da36c4ea48d0ab6983ae8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _closeButton: {fileID: 8018017862646834412}
 --- !u!1 &8175578232940182180
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,21 +2,46 @@ using UnityEngine.Audio;
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+
 public class AudioManager : MonoBehaviour, IGameService
-{   
-    [SerializeField] private SoundEffects[] _soundEffects;
-    [SerializeField] private BackgroundMusic[] _backgroundMusic;
-    [SerializeField] private AudioSource _audioSourcePrefab;
-    [SerializeField] private AudioMixer _volumeMixer;
+{
+    [SerializeField]
+    private SoundEffects[] _soundEffects;
+
+    [SerializeField]
+    private BackgroundMusic[] _backgroundMusic;
+
+    [SerializeField]
+    private AudioSource _audioSourcePrefab;
+
+    [SerializeField]
+    private AudioMixer _volumeMixer;
     public float FadeDuration = 1f; // 音量淡出持續時間
     private AudioSource _oldAudioSource;
 
     private void Awake()
-    {  
-        DontDestroyOnLoad(gameObject);                   
+    {
+        DontDestroyOnLoad(gameObject);
         Debug.Log("AudioManager: " + name + " RegisterService!");
         ServiceLocator.Instance.RegisterService<AudioManager>(this, false);
+    }
+
+    private void Start()
+    {
+        if (PlayerPrefs.HasKey("MasterVolume"))
+        {
+            SetVolumes();
+        }
+    }
+
+    private void SetVolumes()
+    {
+        float masterVolume = PlayerPrefs.GetFloat("MasterVolume");
+        _volumeMixer.SetFloat("master", Mathf.Log10(masterVolume) * 20);
+        float musicVolume = PlayerPrefs.GetFloat("MusicVolume");
+        _volumeMixer.SetFloat("music", Mathf.Log10(musicVolume) * 20);
+        float sfxVolume = PlayerPrefs.GetFloat("SFXVolume");
+        _volumeMixer.SetFloat("sfx", Mathf.Log10(sfxVolume) * 20);
     }
 
     public void PlaySoundEffects(string id)
@@ -28,7 +53,7 @@ public class AudioManager : MonoBehaviour, IGameService
         IsSoundEffectExist(soundEffect);
         SetSoundEffect(audioSource, soundEffect);
         RandomSoundEffectsValue(audioSource, soundEffect);
-        audioSource.Play();   
+        audioSource.Play();
         StartCoroutine(DestroyAfterSoundEffect(audioSource));
     }
 
