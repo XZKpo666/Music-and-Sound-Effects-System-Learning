@@ -69,7 +69,6 @@ public class AudioManager : MonoBehaviour, IGameService
 
     private void LoadVolumes()
     {
-        Debug.Log("Set Default Volume");
         float masterVolume = PlayerPrefs.GetFloat("MasterVolume");
         _volumeMixer.SetFloat("master", Mathf.Log10(masterVolume) * 20);
         float musicVolume = PlayerPrefs.GetFloat("MusicVolume");
@@ -87,6 +86,7 @@ public class AudioManager : MonoBehaviour, IGameService
         if (soundEffect == null)
         {
             Debug.LogWarning("Sound Effect: " + name + " not found!");
+            Destroy(audioSource.gameObject);
             return;
         } 
 
@@ -112,7 +112,8 @@ public class AudioManager : MonoBehaviour, IGameService
     
     private IEnumerator DestroyAfterSoundEffect(AudioSource audioSource)
     {
-        yield return new WaitForSeconds(audioSource.clip.length);
+        float actualAudioLength = audioSource.clip.length / audioSource.pitch;
+        yield return new WaitForSeconds(actualAudioLength);
         Destroy(audioSource.gameObject);
     }
 

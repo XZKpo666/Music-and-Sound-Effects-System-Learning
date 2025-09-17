@@ -922,7 +922,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3475566479980243856, guid: 23254a4843a073943a24a7d6f80da1bd, type: 3}
       propertyPath: _soundEffects.Array.data[0].MaxPitch
-      value: 1.5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3475566479980243856, guid: 23254a4843a073943a24a7d6f80da1bd, type: 3}
       propertyPath: _soundEffects.Array.data[0].MinPitch
