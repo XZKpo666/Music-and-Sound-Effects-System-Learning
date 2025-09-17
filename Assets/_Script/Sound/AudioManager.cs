@@ -1,7 +1,7 @@
 using UnityEngine.Audio;
-using System;
 using System.Collections;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class AudioManager : MonoBehaviour, IGameService
 {
@@ -11,31 +11,65 @@ public class AudioManager : MonoBehaviour, IGameService
     [SerializeField]
     private BackgroundMusic[] _backgroundMusic;
 
+    private Dictionary<string, SoundEffects> _soundEffectDictionary;
+    private Dictionary<string, BackgroundMusic> _backgroundMusicDictionary;
+
     [SerializeField]
     private AudioSource _audioSourcePrefab;
 
     [SerializeField]
     private AudioMixer _volumeMixer;
-    public float FadeDuration = 1f; // 音量淡出持續時間
+
+    [SerializeField]
+    private float FadeInDuration = 1f;
+
+    [SerializeField]
+    private float FadeOutDuration = 1f;
+
     private AudioSource _oldAudioSource;
+
+    private void OnEnable()
+    {
+        ServiceLocator.Instance.RegisterService(this, false);
+    }
+
+    private void OnDisable()
+    {
+        ServiceLocator.Instance.RemoveService<AudioManager>(false);
+    }
 
     private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
-        Debug.Log("AudioManager: " + name + " RegisterService!");
-        ServiceLocator.Instance.RegisterService<AudioManager>(this, false);
+        DontDestroyOnLoad(gameObject); //不用加到彈射少女
+
+        _soundEffectDictionary = new Dictionary<string, SoundEffects>();
+        _backgroundMusicDictionary = new Dictionary<string, BackgroundMusic>();
+        
+        foreach (SoundEffects soundEffect in _soundEffects)
+            _soundEffectDictionary.Add(soundEffect.Id, soundEffect);
+        
+        foreach (BackgroundMusic backgroundMusic in _backgroundMusic)
+            _backgroundMusicDictionary.Add(backgroundMusic.Id, backgroundMusic);   
     }
 
     private void Start()
     {
-        if (PlayerPrefs.HasKey("MasterVolume"))
-        {
-            SetVolumes();
-        }
+        IsHasPlayerPrefs();
     }
 
-    private void SetVolumes()
+    private void IsHasPlayerPrefs()
     {
+        if (PlayerPrefs.HasKey("MasterVolume"))
+            LoadVolumes();
+        if (PlayerPrefs.HasKey("MusicVolume"))
+            LoadVolumes();
+        if (PlayerPrefs.HasKey("SFXVolume"))
+            LoadVolumes();
+    }
+
+    private void LoadVolumes()
+    {
+        Debug.Log("Set Default Volume");
         float masterVolume = PlayerPrefs.GetFloat("MasterVolume");
         _volumeMixer.SetFloat("master", Mathf.Log10(masterVolume) * 20);
         float musicVolume = PlayerPrefs.GetFloat("MusicVolume");
@@ -46,24 +80,20 @@ public class AudioManager : MonoBehaviour, IGameService
 
     public void PlaySoundEffects(string id)
     {
-        SoundEffects soundEffect = Array.Find(_soundEffects, sound => sound.Id == id);
+        SoundEffects soundEffect = _soundEffectDictionary.ContainsKey(id) ? _soundEffectDictionary[id] : null;
         AudioSource audioSource = Instantiate(_audioSourcePrefab);
         audioSource.outputAudioMixerGroup = _volumeMixer.FindMatchingGroups("SFX")[0];
 
-        IsSoundEffectExist(soundEffect);
-        SetSoundEffect(audioSource, soundEffect);
-        RandomSoundEffectsValue(audioSource, soundEffect);
-        audioSource.Play();
-        StartCoroutine(DestroyAfterSoundEffect(audioSource));
-    }
-
-    private void IsSoundEffectExist(SoundEffects soundEffect)
-    {
         if (soundEffect == null)
         {
             Debug.LogWarning("Sound Effect: " + name + " not found!");
             return;
-        }
+        } 
+
+        SetSoundEffect(audioSource, soundEffect);
+        RandomSoundEffectsValue(audioSource, soundEffect);
+        audioSource.Play();
+        StartCoroutine(DestroyAfterSoundEffect(audioSource));
     }
 
     private void SetSoundEffect(AudioSource audioSource, SoundEffects soundEffect)
@@ -82,20 +112,21 @@ public class AudioManager : MonoBehaviour, IGameService
     
     private IEnumerator DestroyAfterSoundEffect(AudioSource audioSource)
     {
-        while (audioSource.isPlaying)
-        {
-            yield return null;
-        }
-        Destroy(audioSource);
+        yield return new WaitForSeconds(audioSource.clip.length);
+        Destroy(audioSource.gameObject);
     }
 
     public void PlayBackgroundMusic(string id)
     {
-        BackgroundMusic backgroundMusic = Array.Find(_backgroundMusic, sound => sound.Id == id);
+        BackgroundMusic backgroundMusic = _backgroundMusicDictionary.ContainsKey(id) ? _backgroundMusicDictionary[id] : null;
         AudioSource audioSource = Instantiate(_audioSourcePrefab);
         audioSource.outputAudioMixerGroup = _volumeMixer.FindMatchingGroups("Music")[0];
 
-        IsBackgroundMusicExist(backgroundMusic);
+        if (backgroundMusic == null)
+        {
+            Debug.LogWarning("Background Music: " + name + " not found!");
+            return;
+        }
         IsOldBackgroundMusic(_oldAudioSource);
         SetBackgroundMusic(audioSource, backgroundMusic);
 
@@ -103,20 +134,11 @@ public class AudioManager : MonoBehaviour, IGameService
         _oldAudioSource = audioSource;
     }
 
-    private void IsBackgroundMusicExist(BackgroundMusic backgroundMusic)
-    {
-        if (backgroundMusic == null)
-        {
-            Debug.LogWarning("Background Music: " + name + " not found!");
-            return;
-        }
-    }
-
     private void IsOldBackgroundMusic(AudioSource oldAudioSource)
     {
-        if (_oldAudioSource != null)
+        if (oldAudioSource != null)
         {
-            StartCoroutine(FadeOutMusicAndDestroy(_oldAudioSource));
+            StartCoroutine(FadeOutMusicAndDestroy(oldAudioSource));
         }
     }
 
@@ -131,17 +153,17 @@ public class AudioManager : MonoBehaviour, IGameService
     private IEnumerator FadeOutMusicAndDestroy(AudioSource oldMusicSource)
     {
         if (oldMusicSource == null)
-        {
             yield break;
-        }     
+
         float startVolume = oldMusicSource.volume;
-        for (float t = 0; t < FadeDuration; t += Time.deltaTime)
+        float inverseDuration = 1 / FadeOutDuration;
+        for (float t = 0; t < FadeOutDuration; t += Time.deltaTime)
         {
-            oldMusicSource.volume = Mathf.Lerp(startVolume, 0, t / FadeDuration);
+            oldMusicSource.volume = Mathf.Lerp(startVolume, 0, t * inverseDuration);
             yield return null;
-        } // 淡出
+        }
         oldMusicSource.Stop();
-        Destroy(oldMusicSource); // 銷毀舊音樂物件
+        Destroy(oldMusicSource.gameObject); // 銷毀舊音樂物件
     }
 
     private IEnumerator FadeInMusic(AudioSource newMusic)
@@ -149,9 +171,10 @@ public class AudioManager : MonoBehaviour, IGameService
         newMusic.Play();
         float endVolume = newMusic.volume;
         newMusic.volume = 0; // 將音量設置為0以便淡入
-        for (float t = 0; t < FadeDuration; t += Time.deltaTime)
+        float inverseDuration = 1 / FadeInDuration;
+        for (float t = 0; t < FadeInDuration; t += Time.deltaTime)
         {
-            newMusic.volume = Mathf.Lerp(0, endVolume, t / FadeDuration);
+            newMusic.volume = Mathf.Lerp(0, endVolume, t * inverseDuration);
             yield return null;
         } // 淡入
         newMusic.volume = endVolume; // 確保音量設置為最終值

@@ -21,11 +21,14 @@ public class VolumeSetting : MonoBehaviour
         if (PlayerPrefs.HasKey("MasterVolume"))
             LoadVolume();
         else
-        {
-            _masterSlider.onValueChanged.AddListener(SetMasterVolume);
-            _musicSlider.onValueChanged.AddListener(SetMusicVolume);
-            _sfxSlider.onValueChanged.AddListener(SetSFXVolume);
-        }   
+            SetVolumeListener();  
+    }
+
+    private void SetVolumeListener()
+    {
+        _masterSlider.onValueChanged.AddListener(SetMasterVolume);
+        _musicSlider.onValueChanged.AddListener(SetMusicVolume);
+        _sfxSlider.onValueChanged.AddListener(SetSFXVolume);
     }
 
     public void SetMasterVolume(float volume)
@@ -51,10 +54,7 @@ public class VolumeSetting : MonoBehaviour
 
     private void LoadVolume()
     {
-        _masterSlider.onValueChanged.AddListener(SetMasterVolume);
-        _musicSlider.onValueChanged.AddListener(SetMusicVolume);
-        _sfxSlider.onValueChanged.AddListener(SetSFXVolume);
-
+        SetVolumeListener();
         _masterSlider.value = PlayerPrefs.GetFloat("MasterVolume");
         _musicSlider.value = PlayerPrefs.GetFloat("MusicVolume");
         _sfxSlider.value = PlayerPrefs.GetFloat("SFXVolume");

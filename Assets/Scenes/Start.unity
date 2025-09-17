@@ -881,6 +881,10 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3475566479980243856, guid: 23254a4843a073943a24a7d6f80da1bd, type: 3}
+      propertyPath: _soundEffects.Array.data[0].Id
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3475566479980243856, guid: 23254a4843a073943a24a7d6f80da1bd, type: 3}
       propertyPath: _backgroundMusic.Array.data[1].Id
       value: 1
       objectReference: {fileID: 0}
@@ -1325,7 +1329,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8125480690753733248, guid: 58a7457c37dac384d831f284379e97fd, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1339,8 +1343,8 @@ SceneRoots:
   - {fileID: 1332544588}
   - {fileID: 1294856917}
   - {fileID: 1493898643}
-  - {fileID: 8019526486348264077}
   - {fileID: 1439025695}
   - {fileID: 255230627}
   - {fileID: 74032333}
   - {fileID: 551165793}
+  - {fileID: 8019526486348264077}
