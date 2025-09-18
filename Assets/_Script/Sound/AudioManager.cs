@@ -106,8 +106,8 @@ public class AudioManager : MonoBehaviour, IGameService
 
     private void RandomSoundEffectsValue(AudioSource audioSource, SoundEffects soundEffect)
     {            
-        audioSource.volume = UnityEngine.Random.Range(soundEffect.MinVolume, soundEffect.MaxVolume);
-        audioSource.pitch = UnityEngine.Random.Range(soundEffect.MinPitch, soundEffect.MaxPitch);     
+        audioSource.volume = Random.Range(soundEffect.MinVolume, soundEffect.MaxVolume);
+        audioSource.pitch = Random.Range(soundEffect.MinPitch, soundEffect.MaxPitch);     
     }
     
     private IEnumerator DestroyAfterSoundEffect(AudioSource audioSource)
@@ -126,6 +126,7 @@ public class AudioManager : MonoBehaviour, IGameService
         if (backgroundMusic == null)
         {
             Debug.LogWarning("Background Music: " + name + " not found!");
+            Destroy(audioSource.gameObject);
             return;
         }
         IsOldBackgroundMusic(_oldAudioSource);
