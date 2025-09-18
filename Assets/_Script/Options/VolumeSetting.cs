@@ -1,12 +1,8 @@
 using UnityEngine;
-using UnityEngine.Audio;
 using UnityEngine.UI;
 
 public class VolumeSetting : MonoBehaviour
 {
-    [SerializeField]
-    private AudioMixer _volumeMixer;
-
     [SerializeField]
     private Slider _masterSlider;
 
@@ -16,47 +12,41 @@ public class VolumeSetting : MonoBehaviour
     [SerializeField]
     private Slider _sfxSlider;
 
+    private AudioManager _audioManager;
+
     void Start()
     {
-        if (PlayerPrefs.HasKey("MasterVolume"))
-            LoadVolume();
-        else
-            SetVolumeListener();  
-    }
-
-    private void SetVolumeListener()
-    {
-        _masterSlider.onValueChanged.AddListener(SetMasterVolume);
-        _musicSlider.onValueChanged.AddListener(SetMusicVolume);
-        _sfxSlider.onValueChanged.AddListener(SetSFXVolume);
-    }
-
-    public void SetMasterVolume(float volume)
-    {
-        volume = _masterSlider.value;
-        _volumeMixer.SetFloat("master", Mathf.Log10(volume) * 20);
-        PlayerPrefs.SetFloat("MasterVolume", volume);
-    }
-
-    public void SetMusicVolume(float volume)
-    {
-        volume = _musicSlider.value;
-        _volumeMixer.SetFloat("music", Mathf.Log10(volume) * 20);
-        PlayerPrefs.SetFloat("MusicVolume", volume);
-    }
-
-    public void SetSFXVolume(float volume)
-    {
-        volume = _sfxSlider.value;
-        _volumeMixer.SetFloat("sfx", Mathf.Log10(volume) * 20);
-        PlayerPrefs.SetFloat("SFXVolume", volume);
+        _audioManager = ServiceLocator.Instance.GetService<AudioManager>();
+        SetVolumeListener();
+        LoadVolume();  
     }
 
     private void LoadVolume()
     {
-        SetVolumeListener();
-        _masterSlider.value = PlayerPrefs.GetFloat("MasterVolume");
-        _musicSlider.value = PlayerPrefs.GetFloat("MusicVolume");
-        _sfxSlider.value = PlayerPrefs.GetFloat("SFXVolume");
+        _masterSlider.value = _audioManager._masterVolume;
+        _musicSlider.value = _audioManager._musicVolume;
+        _sfxSlider.value = _audioManager._sfxVolume;
+    }
+
+    private void SetVolumeListener()
+    {
+        _masterSlider.onValueChanged.AddListener(DraggingMasterVolumeSlider);
+        _musicSlider.onValueChanged.AddListener(DraggingMusicVolumeSlider);
+        _sfxSlider.onValueChanged.AddListener(DraggingSFXVolumeSlider);
+    }
+
+    private void DraggingMasterVolumeSlider(float volume)
+    {
+        _audioManager.ChangeMasterVolume(volume);
+    }
+
+    private void DraggingMusicVolumeSlider(float volume)
+    {
+        _audioManager.ChangeMusicVolume(volume);
+    }
+
+    private void DraggingSFXVolumeSlider(float volume)
+    {
+        _audioManager.ChangeSFXVolume(volume);
     }
 }
