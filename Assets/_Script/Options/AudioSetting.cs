@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class VolumeSetting : MonoBehaviour
+public class AudioSetting : MonoBehaviour
 {
     [SerializeField]
     private Slider _masterSlider;
@@ -23,9 +23,9 @@ public class VolumeSetting : MonoBehaviour
 
     private void LoadVolume()
     {
-        _masterSlider.value = _audioManager._masterVolume;
-        _musicSlider.value = _audioManager._musicVolume;
-        _sfxSlider.value = _audioManager._sfxVolume;
+        _masterSlider.value = _audioManager.MasterVolume;
+        _musicSlider.value = _audioManager.MusicVolume;
+        _sfxSlider.value = _audioManager.SfxVolume;
     }
 
     private void SetVolumeListener()

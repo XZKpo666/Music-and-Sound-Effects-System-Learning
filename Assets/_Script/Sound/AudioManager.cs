@@ -28,9 +28,9 @@ public class AudioManager : MonoBehaviour, IGameService
 
     private AudioSource _oldAudioSource;
 
-    public float _masterVolume;
-    public float _musicVolume;
-    public float _sfxVolume;
+    public float MasterVolume;
+    public float MusicVolume;
+    public float SfxVolume;
 
     private void OnEnable()
     {
@@ -46,9 +46,11 @@ public class AudioManager : MonoBehaviour, IGameService
     {
         DontDestroyOnLoad(gameObject); //不用加到彈射少女
 
+        //創建字典
         _soundEffectDictionary = new Dictionary<string, SoundEffects>();
         _backgroundMusicDictionary = new Dictionary<string, BackgroundMusic>();
 
+        //用字典儲存
         foreach (SoundEffects soundEffect in _soundEffects)
             _soundEffectDictionary.Add(soundEffect.Id, soundEffect);
 
@@ -58,6 +60,7 @@ public class AudioManager : MonoBehaviour, IGameService
 
     private void Start()
     {
+        //載入音量
         LoadVolumes();
     }
 
@@ -65,8 +68,8 @@ public class AudioManager : MonoBehaviour, IGameService
     {
         if (PlayerPrefs.HasKey("MasterVolume"))
         {
-            _masterVolume = PlayerPrefs.GetFloat("MasterVolume");
-            _volumeMixer.SetFloat("master", Mathf.Log10(_masterVolume) * 20);
+            MasterVolume = PlayerPrefs.GetFloat("MasterVolume");
+            _volumeMixer.SetFloat("master", Mathf.Log10(MasterVolume) * 20);
         }
         else
         {
@@ -76,8 +79,8 @@ public class AudioManager : MonoBehaviour, IGameService
 
         if (PlayerPrefs.HasKey("MusicVolume"))
         {
-            _musicVolume = PlayerPrefs.GetFloat("MusicVolume");
-            _volumeMixer.SetFloat("music", Mathf.Log10(_musicVolume) * 20);
+            MusicVolume = PlayerPrefs.GetFloat("MusicVolume");
+            _volumeMixer.SetFloat("music", Mathf.Log10(MusicVolume) * 20);
         }
         else
         {
@@ -87,8 +90,8 @@ public class AudioManager : MonoBehaviour, IGameService
 
         if (PlayerPrefs.HasKey("SFXVolume"))
         {
-            _sfxVolume = PlayerPrefs.GetFloat("SFXVolume");
-            _volumeMixer.SetFloat("sfx", Mathf.Log10(_sfxVolume) * 20);
+            SfxVolume = PlayerPrefs.GetFloat("SFXVolume");
+            _volumeMixer.SetFloat("sfx", Mathf.Log10(SfxVolume) * 20);
         }
         else
         {
@@ -99,10 +102,13 @@ public class AudioManager : MonoBehaviour, IGameService
 
     public void PlaySoundEffects(string id)
     {
+        //尋找指定音效，ID查詢
         SoundEffects soundEffect = _soundEffectDictionary.ContainsKey(id) ? _soundEffectDictionary[id] : null;
         AudioSource audioSource = Instantiate(_audioSourcePrefab);
+        //找出對應的Mixer
         audioSource.outputAudioMixerGroup = _volumeMixer.FindMatchingGroups("SFX")[0];
-
+        
+        //找不到音效就報錯並刪除這個AudioSource
         if (soundEffect == null)
         {
             Debug.LogWarning("Sound Effect: " + name + " not found!");
@@ -204,22 +210,22 @@ public class AudioManager : MonoBehaviour, IGameService
 
     public void ChangeMasterVolume(float volume)
     {
-        _masterVolume = volume;
-        _volumeMixer.SetFloat("master", Mathf.Log10(_masterVolume) * 20);
-        PlayerPrefs.SetFloat("MasterVolume", _masterVolume);
+        MasterVolume = volume;
+        _volumeMixer.SetFloat("master", Mathf.Log10(MasterVolume) * 20);
+        PlayerPrefs.SetFloat("MasterVolume", MasterVolume);
     }
 
     public void ChangeMusicVolume(float volume)
     {
-        _musicVolume = volume;
-        _volumeMixer.SetFloat("music", Mathf.Log10(_musicVolume) * 20);
-        PlayerPrefs.SetFloat("MusicVolume", _musicVolume);
+        MusicVolume = volume;
+        _volumeMixer.SetFloat("music", Mathf.Log10(MusicVolume) * 20);
+        PlayerPrefs.SetFloat("MusicVolume", MusicVolume);
     }
 
     public void ChangeSFXVolume(float volume)
     {
-        _sfxVolume = volume;
-        _volumeMixer.SetFloat("sfx", Mathf.Log10(_sfxVolume) * 20);
-        PlayerPrefs.SetFloat("SFXVolume", _sfxVolume);
+        SfxVolume = volume;
+        _volumeMixer.SetFloat("sfx", Mathf.Log10(SfxVolume) * 20);
+        PlayerPrefs.SetFloat("SFXVolume", SfxVolume);
     }
 }
