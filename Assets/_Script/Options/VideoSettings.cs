@@ -18,8 +18,6 @@ public class VideoSettings : MonoBehaviour
     private VideoManager _videoManager;
     private bool _isOnVSync;
     private int _framerate;
-    private bool _isFromInputField = false;
-
 
     private void Start()
     {

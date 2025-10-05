@@ -7,9 +7,6 @@ public class OptionsHandler : MonoBehaviour
     private Button _closeButton;
 
     [SerializeField]
-    private Button _applyButton;
-
-    [SerializeField]
     private Button _gameSettingsButton;
 
     [SerializeField]
