@@ -14,11 +14,24 @@ public class AudioSetting : MonoBehaviour
 
     private AudioManager _audioManager;
 
-    void Start()
+    private void Start()
     {
         _audioManager = ServiceLocator.Instance.GetService<AudioManager>();
-        SetVolumeListener();
         LoadVolume();  
+    }
+
+    private void OnEnable()
+    {
+        _masterSlider.onValueChanged.AddListener(DraggingMasterVolumeSlider);
+        _musicSlider.onValueChanged.AddListener(DraggingMusicVolumeSlider);
+        _sfxSlider.onValueChanged.AddListener(DraggingSFXVolumeSlider);
+    }
+
+    private void OnDisable()
+    {
+        _masterSlider.onValueChanged.RemoveListener(DraggingMasterVolumeSlider);
+        _musicSlider.onValueChanged.RemoveListener(DraggingMusicVolumeSlider);
+        _sfxSlider.onValueChanged.RemoveListener(DraggingSFXVolumeSlider);
     }
 
     private void LoadVolume()
@@ -26,13 +39,6 @@ public class AudioSetting : MonoBehaviour
         _masterSlider.value = _audioManager.MasterVolume;
         _musicSlider.value = _audioManager.MusicVolume;
         _sfxSlider.value = _audioManager.SfxVolume;
-    }
-
-    private void SetVolumeListener()
-    {
-        _masterSlider.onValueChanged.AddListener(DraggingMasterVolumeSlider);
-        _musicSlider.onValueChanged.AddListener(DraggingMusicVolumeSlider);
-        _sfxSlider.onValueChanged.AddListener(DraggingSFXVolumeSlider);
     }
 
     private void DraggingMasterVolumeSlider(float volume)
