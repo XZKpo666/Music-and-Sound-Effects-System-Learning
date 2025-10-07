@@ -4,6 +4,9 @@ using UnityEngine.UI;
 public class OptionsHandler : MonoBehaviour
 {
     [SerializeField]
+    private GameObject _mainMenuCanvasPrefab;
+
+    [SerializeField]
     private Button _closeButton;
 
     [SerializeField]
@@ -92,6 +95,7 @@ public class OptionsHandler : MonoBehaviour
 
     private void CloseOptions()
     {
+        Instantiate(_mainMenuCanvasPrefab);
         Destroy(gameObject);
     }
 

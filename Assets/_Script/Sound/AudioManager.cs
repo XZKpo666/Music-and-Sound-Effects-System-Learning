@@ -44,8 +44,6 @@ public class AudioManager : MonoBehaviour, IGameService
 
     private void Awake()
     {
-        DontDestroyOnLoad(gameObject); //不用加到彈射少女
-
         //創建字典
         _soundEffectDictionary = new Dictionary<string, SoundEffects>();
         _backgroundMusicDictionary = new Dictionary<string, BackgroundMusic>();

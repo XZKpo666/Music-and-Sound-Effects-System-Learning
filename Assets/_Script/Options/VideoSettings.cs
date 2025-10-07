@@ -15,9 +15,13 @@ public class VideoSettings : MonoBehaviour
     [SerializeField]
     private Toggle _vSyncToggle;
 
+    [SerializeField]
+    private Dropdown _displayModeDropdown;
+
     private VideoManager _videoManager;
     private bool _isOnVSync;
     private int _framerate;
+    private int _displayMode;
 
     private void Start()
     {
@@ -30,6 +34,7 @@ public class VideoSettings : MonoBehaviour
         _framerateSlider.onValueChanged.AddListener(DraggingFramerateSlider);
         _framerateInputField.onEndEdit.AddListener(FramerateInputField);
         _vSyncToggle.onValueChanged.AddListener(ToggleVSync);
+        _displayModeDropdown.onValueChanged.AddListener(ChangeDisplayModeDropdown);
         _applyButton.onClick.AddListener(ApplyVideoSettings);
     }
 
@@ -38,6 +43,7 @@ public class VideoSettings : MonoBehaviour
         _framerateSlider.onValueChanged.RemoveListener(DraggingFramerateSlider);
         _framerateInputField.onEndEdit.RemoveListener(FramerateInputField);
         _vSyncToggle.onValueChanged.RemoveListener(ToggleVSync);
+        _displayModeDropdown.onValueChanged.RemoveAllListeners();
         _applyButton.onClick.RemoveListener(ApplyVideoSettings);
     }
 
@@ -49,6 +55,8 @@ public class VideoSettings : MonoBehaviour
         _isOnVSync = _videoManager.IsOnVSync;
         _vSyncToggle.isOn = _isOnVSync;
         UpdateFrameRateUIInteractable();
+        _displayMode = _videoManager.DisplayMode;
+        _displayModeDropdown.value = _displayMode;    
     }
 
     private void ApplyVideoSettings()
@@ -56,6 +64,7 @@ public class VideoSettings : MonoBehaviour
         _videoManager.ChangeFrameRate((int)_framerateSlider.value);
         _videoManager.SetVSync(_isOnVSync);
         UpdateFrameRateUIInteractable();
+        _videoManager.ChangeDisplayMode(_displayMode);
     }
 
     private void DraggingFramerateSlider(float framerate)
@@ -82,7 +91,7 @@ public class VideoSettings : MonoBehaviour
     {
         _isOnVSync = isOn;
     }
-    
+
     private void UpdateFrameRateUIInteractable()
     {
         if (_isOnVSync == true)
@@ -96,4 +105,10 @@ public class VideoSettings : MonoBehaviour
             _framerateInputField.interactable = true;
         }
     }
+
+    private void ChangeDisplayModeDropdown(int displaymode)
+    {
+        _displayMode = displaymode;
+    }
+
 }

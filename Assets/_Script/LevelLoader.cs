@@ -2,22 +2,24 @@ using UnityEngine.SceneManagement;
 using UnityEngine;
 using System.Collections;
 
-public class LevelLoader : MonoBehaviour
+public class LevelLoader : MonoBehaviour, IGameService
 {
-
     public Animator _transitionAnimator; 
     public float _transitionTime = 1f; 
-    private int _levelIndex;
-
-    public void LoadLevel()
+    
+    private void OnEnable()
     {
-        _levelIndex = SceneManager.GetActiveScene().buildIndex; 
-        if (_levelIndex == 1)
-        {
-            _levelIndex = 0;
-        }    
-        _levelIndex++;
-        StartCoroutine(LoadLevelWithDelay(_levelIndex, _transitionTime));
+        ServiceLocator.Instance.RegisterService(this, false);
+    }
+
+    private void OnDisable()
+    {
+        ServiceLocator.Instance.RemoveService<LevelLoader>(false);
+    }
+
+    public void LoadLevel(int scencemode)
+    {
+        StartCoroutine(LoadLevelWithDelay(scencemode, _transitionTime));
     }
 
     IEnumerator LoadLevelWithDelay(int levelIndex, float delay)
@@ -32,7 +34,7 @@ public class LevelLoader : MonoBehaviour
         } 
 
         yield return new WaitForSeconds(delay);
-    
+
         SceneManager.LoadScene(levelIndex);
     }
 
