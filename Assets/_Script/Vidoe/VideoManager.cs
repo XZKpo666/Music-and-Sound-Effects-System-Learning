@@ -8,7 +8,7 @@ public class VideoManager : MonoBehaviour, IGameService
     public bool IsOnVSync;
     public int DisplayMode;
     public int ResolutionIndex;
-    public Resolution[] _resolutions;
+    public Resolution[] Resolutions;
     private Resolution _currentResolution;
     private FullScreenMode _currentFullScreenMode;
 
@@ -24,7 +24,7 @@ public class VideoManager : MonoBehaviour, IGameService
 
     private void Start()
     {
-        _resolutions = Screen.resolutions;
+        Resolutions = Screen.resolutions;
         LoadVideoSettings();
     }
 
@@ -49,7 +49,7 @@ public class VideoManager : MonoBehaviour, IGameService
         if (PlayerPrefs.HasKey("ResolutionIndex"))
             SetResolution(PlayerPrefs.GetInt("ResolutionIndex"));
         else
-            SetResolution(_resolutions.Length - 1); //預設最高解析度
+            SetResolution(Resolutions.Length - 1); //預設最高解析度
             
         ChangeResolution();
     }
@@ -93,9 +93,9 @@ public class VideoManager : MonoBehaviour, IGameService
 
     public void SetResolution(int resolutionIndex)
     {
-        if (resolutionIndex >= 0 && resolutionIndex < _resolutions.Length)
+        if (resolutionIndex >= 0 && resolutionIndex < Resolutions.Length)
         {
-            _currentResolution = _resolutions[resolutionIndex];
+            _currentResolution = Resolutions[resolutionIndex];
             ResolutionIndex = resolutionIndex;
             PlayerPrefs.SetInt("ResolutionIndex", ResolutionIndex);
         }

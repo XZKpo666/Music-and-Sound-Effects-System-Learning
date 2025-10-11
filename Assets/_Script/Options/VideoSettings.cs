@@ -27,7 +27,6 @@ public class VideoSettings : MonoBehaviour
     private int _framerate;
     private int _displayMode;
     private int _resolutionIndex;
-    private Resolution[] _resolutions;
     private List<string> _resolutionOptions = new List<string>();
     private List<Resolution> _currentHzResolutions = new List<Resolution>();
 
@@ -77,9 +76,8 @@ public class VideoSettings : MonoBehaviour
     
     private void LoadResolutionsOptions()
     {
-        _resolutions = Screen.resolutions;
         double currentHz = Screen.currentResolution.refreshRateRatio.value;
-        foreach (Resolution res in _resolutions)
+        foreach (Resolution res in _videoManager.Resolutions)
         {
             if (res.refreshRateRatio.value != currentHz) continue;
             string option = res.width + " x " + res.height;
@@ -89,7 +87,7 @@ public class VideoSettings : MonoBehaviour
                 _currentHzResolutions.Add(res);
             }
         }
-        _videoManager._resolutions = _currentHzResolutions.ToArray();
+        _videoManager.Resolutions = _currentHzResolutions.ToArray();
         _resolutionDropdown.ClearOptions();
         _resolutionDropdown.AddOptions(_resolutionOptions);
     }
