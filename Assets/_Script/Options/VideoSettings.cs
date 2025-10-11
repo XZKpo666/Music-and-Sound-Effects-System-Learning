@@ -56,7 +56,11 @@ public class VideoSettings : MonoBehaviour
         _vSyncToggle.isOn = _isOnVSync;
         _displayMode = _videoManager.DisplayMode;
         _displayModeDropdown.value = _displayMode;
-        UpdateFrameRateUIInteractable();        
+        if (_isOnVSync == true)
+        {
+            _framerateSlider.interactable = false;
+            _framerateInputField.interactable = false;
+        }        
     }
 
     private void ApplyVideoSettings()
@@ -64,7 +68,6 @@ public class VideoSettings : MonoBehaviour
         _videoManager.ChangeFrameRate((int)_framerateSlider.value);
         _videoManager.SetVSync(_isOnVSync);
         _videoManager.ChangeDisplayMode(_displayMode);
-        UpdateFrameRateUIInteractable();  
     }
 
     private void DraggingFramerateSlider(float framerate)
@@ -90,20 +93,8 @@ public class VideoSettings : MonoBehaviour
     private void ToggleVSync(bool isOn)
     {
         _isOnVSync = isOn;
-    }
-
-    private void UpdateFrameRateUIInteractable()
-    {
-        if (_isOnVSync == true)
-        {
-            _framerateSlider.interactable = false;
-            _framerateInputField.interactable = false;
-        }
-        else
-        {
-            _framerateSlider.interactable = true;
-            _framerateInputField.interactable = true;
-        }
+        _framerateSlider.interactable = !isOn;
+        _framerateInputField.interactable = !isOn;
     }
 
     private void ChangeDisplayModeDropdown(int displaymode)
