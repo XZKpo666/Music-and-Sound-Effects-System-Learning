@@ -15,6 +15,12 @@ public class MainMenuHandler : MonoBehaviour
     [SerializeField]
     private Button _startGameButton;
 
+    [SerializeField]
+    private Button _exitGameButton;
+
+    [SerializeField]
+    private Button _cleanPlayerPrefsButton;
+
     private LevelLoader _levelLoader;
 
     private void Start()
@@ -26,12 +32,16 @@ public class MainMenuHandler : MonoBehaviour
     {
         _startGameButton.onClick.AddListener(StartGame);
         _openOptions.onClick.AddListener(OpenOptions);
+            _exitGameButton.onClick.AddListener(ExitGame);
+        _cleanPlayerPrefsButton.onClick.AddListener(CleanPlayerPrefs);
     }
 
     private void OnDisable()
     {
         _startGameButton.onClick.RemoveListener(StartGame);
         _openOptions.onClick.RemoveListener(OpenOptions);
+        _exitGameButton.onClick.RemoveListener(ExitGame);
+        _cleanPlayerPrefsButton.onClick.RemoveListener(CleanPlayerPrefs);
     }
 
     private void StartGame()
@@ -43,5 +53,15 @@ public class MainMenuHandler : MonoBehaviour
     {
         Instantiate(_optionsCanvasPrefab);
         Destroy(_mainMenuCanvasPrefab);
+    }
+
+    private void ExitGame()
+    {
+        Application.Quit();
+    }
+
+    private void CleanPlayerPrefs()
+    {
+        PlayerPrefs.DeleteAll();
     }
 }

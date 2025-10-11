@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,10 +19,17 @@ public class VideoSettings : MonoBehaviour
     [SerializeField]
     private Dropdown _displayModeDropdown;
 
+    [SerializeField]
+    private Dropdown _resolutionDropdown;
+
     private VideoManager _videoManager;
     private bool _isOnVSync;
     private int _framerate;
     private int _displayMode;
+    private int _resolutionIndex;
+    private Resolution[] _resolutions;
+    private List<string> _resolutionOptions = new List<string>();
+    private List<Resolution> _currentHzResolutions = new List<Resolution>();
 
     private void Start()
     {
@@ -36,6 +44,7 @@ public class VideoSettings : MonoBehaviour
         _vSyncToggle.onValueChanged.AddListener(ToggleVSync);
         _displayModeDropdown.onValueChanged.AddListener(ChangeDisplayModeDropdown);
         _applyButton.onClick.AddListener(ApplyVideoSettings);
+        _resolutionDropdown.onValueChanged.AddListener(OnResolutionChange);
     }
 
     private void OnDisable()
@@ -45,6 +54,7 @@ public class VideoSettings : MonoBehaviour
         _vSyncToggle.onValueChanged.RemoveListener(ToggleVSync);
         _displayModeDropdown.onValueChanged.RemoveAllListeners();
         _applyButton.onClick.RemoveListener(ApplyVideoSettings);
+        _resolutionDropdown.onValueChanged.RemoveListener(OnResolutionChange);
     }
 
     private void LoadVideoSettings()
@@ -54,13 +64,34 @@ public class VideoSettings : MonoBehaviour
         _framerateInputField.text = _framerate.ToString();
         _isOnVSync = _videoManager.IsOnVSync;
         _vSyncToggle.isOn = _isOnVSync;
-        _displayMode = _videoManager.DisplayMode;
-        _displayModeDropdown.value = _displayMode;
         if (_isOnVSync == true)
         {
             _framerateSlider.interactable = false;
             _framerateInputField.interactable = false;
-        }        
+        }
+        _displayMode = _videoManager.DisplayMode;
+        _displayModeDropdown.value = _displayMode;
+        LoadResolutionsOptions();
+        _resolutionDropdown.value = _videoManager.ResolutionIndex;
+    }
+    
+    private void LoadResolutionsOptions()
+    {
+        _resolutions = Screen.resolutions;
+        double currentHz = Screen.currentResolution.refreshRateRatio.value;
+        foreach (Resolution res in _resolutions)
+        {
+            if (res.refreshRateRatio.value != currentHz) continue;
+            string option = res.width + " x " + res.height;
+            if (!_resolutionOptions.Contains(option))
+            {
+                _resolutionOptions.Add(option);
+                _currentHzResolutions.Add(res);
+            }
+        }
+        _videoManager._resolutions = _currentHzResolutions.ToArray();
+        _resolutionDropdown.ClearOptions();
+        _resolutionDropdown.AddOptions(_resolutionOptions);
     }
 
     private void ApplyVideoSettings()
@@ -68,6 +99,13 @@ public class VideoSettings : MonoBehaviour
         _videoManager.ChangeFrameRate((int)_framerateSlider.value);
         _videoManager.SetVSync(_isOnVSync);
         _videoManager.ChangeDisplayMode(_displayMode);
+        _videoManager.SetResolution(_resolutionIndex);
+        _videoManager.ChangeResolution();
+    }
+
+    private void OnResolutionChange(int resolutionIndex)
+    {
+        _resolutionIndex = resolutionIndex;
     }
 
     private void DraggingFramerateSlider(float framerate)

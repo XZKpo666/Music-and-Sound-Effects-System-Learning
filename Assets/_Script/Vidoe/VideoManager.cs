@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class VideoManager : MonoBehaviour, IGameService
@@ -6,6 +7,10 @@ public class VideoManager : MonoBehaviour, IGameService
     public int Framerate;
     public bool IsOnVSync;
     public int DisplayMode;
+    public int ResolutionIndex;
+    public Resolution[] _resolutions;
+    private Resolution _currentResolution;
+    private FullScreenMode _currentFullScreenMode;
 
     private void OnEnable()
     {
@@ -19,6 +24,7 @@ public class VideoManager : MonoBehaviour, IGameService
 
     private void Start()
     {
+        _resolutions = Screen.resolutions;
         LoadVideoSettings();
     }
 
@@ -34,11 +40,18 @@ public class VideoManager : MonoBehaviour, IGameService
             ChangeFrameRate(PlayerPrefs.GetInt("Framerate"));
         else
             ChangeFrameRate(60); //預設60幀
-
+            
         if (PlayerPrefs.HasKey("DisplayMode"))
             ChangeDisplayMode(PlayerPrefs.GetInt("DisplayMode"));
         else
-            ChangeDisplayMode(0); //預設全螢幕
+            ChangeDisplayMode(0); //預設全螢幕    
+
+        if (PlayerPrefs.HasKey("ResolutionIndex"))
+            SetResolution(PlayerPrefs.GetInt("ResolutionIndex"));
+        else
+            SetResolution(_resolutions.Length - 1); //預設最高解析度
+            
+        ChangeResolution();
     }
 
     public void SetVSync(bool isOn)
@@ -62,18 +75,34 @@ public class VideoManager : MonoBehaviour, IGameService
         switch (displaymode)
         {
             case 0:
-                Screen.fullScreenMode = FullScreenMode.ExclusiveFullScreen;
+                _currentFullScreenMode = FullScreenMode.ExclusiveFullScreen;
                 break;
             case 1:
-                Screen.fullScreenMode = FullScreenMode.FullScreenWindow;
+                _currentFullScreenMode = FullScreenMode.FullScreenWindow;
                 break;
             case 2:
-                Screen.fullScreenMode = FullScreenMode.MaximizedWindow;
+                _currentFullScreenMode = FullScreenMode.MaximizedWindow;
                 break;
             case 3:
-                Screen.fullScreenMode = FullScreenMode.Windowed;
+                _currentFullScreenMode = FullScreenMode.Windowed;
                 break;
         }
+        DisplayMode = displaymode;
         PlayerPrefs.SetInt("DisplayMode", displaymode);
+    }
+
+    public void SetResolution(int resolutionIndex)
+    {
+        if (resolutionIndex >= 0 && resolutionIndex < _resolutions.Length)
+        {
+            _currentResolution = _resolutions[resolutionIndex];
+            ResolutionIndex = resolutionIndex;
+            PlayerPrefs.SetInt("ResolutionIndex", ResolutionIndex);
+        }
+    }
+
+    public void ChangeResolution()
+    {
+        Screen.SetResolution(_currentResolution.width, _currentResolution.height, _currentFullScreenMode, _currentResolution.refreshRateRatio);
     }
 }
