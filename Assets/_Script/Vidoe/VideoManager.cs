@@ -12,8 +12,9 @@ public class VideoManager : MonoBehaviour, IGameService
     public Resolution[] Resolutions;
     public List<string> ResolutionOptions = new List<string>();
     private Resolution _currentResolution;
+    private Resolution _oldResolution;
     private FullScreenMode _currentDisplayMode;
-    private List<Resolution> _currentHzResolutions = new List<Resolution>();
+    private List<Resolution> _currentResolutions = new List<Resolution>();
     private RefreshRate _currentRefreshRate = new RefreshRate {};
 
     private void OnEnable()
@@ -96,6 +97,7 @@ public class VideoManager : MonoBehaviour, IGameService
     {
         if (resolutionIndex >= 0 && resolutionIndex < Resolutions.Length)
         {
+            _oldResolution = _currentResolution;
             _currentResolution = Resolutions[resolutionIndex];
             ResolutionIndex = resolutionIndex;
             PlayerPrefs.SetInt("ResolutionIndex", ResolutionIndex);
@@ -116,14 +118,20 @@ public class VideoManager : MonoBehaviour, IGameService
             if (!ResolutionOptions.Contains(option))
             {
                 ResolutionOptions.Add(option);
-                _currentHzResolutions.Add(res);
+                _currentResolutions.Add(res);
             }
         }
-        Resolutions = _currentHzResolutions.ToArray();
+        Resolutions = _currentResolutions.ToArray();
     }
 
     public void ChangeResolution()
     {
         Screen.SetResolution(_currentResolution.width, _currentResolution.height, _currentDisplayMode, _currentRefreshRate);
+    }
+
+    public void RevertResolution()
+    {
+        _currentResolution = _oldResolution;
+        ChangeResolution();
     }
 }

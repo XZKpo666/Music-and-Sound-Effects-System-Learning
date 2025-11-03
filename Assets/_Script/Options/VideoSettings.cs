@@ -22,11 +22,22 @@ public class VideoSettings : MonoBehaviour
     [SerializeField]
     private Dropdown _resolutionDropdown;
 
+    [SerializeField]
+    private GameObject _confirmResolutionChange;
+
+    [SerializeField]
+    private Button _notChangeResolutionButton;
+
+    [SerializeField]
+    private Button _confirmResolutionButton;
+
     private VideoManager _videoManager;
     private bool _isOnVSync;
     private int _framerate;
     private int _displayMode;
     private int _resolutionIndex;
+    private int _oldResolutionIndex;
+    private bool _isResolutionChanged = false;
 
     private void Start()
     {
@@ -42,6 +53,8 @@ public class VideoSettings : MonoBehaviour
         _displayModeDropdown.onValueChanged.AddListener(ChangeDisplayModeDropdown);
         _applyButton.onClick.AddListener(ApplyVideoSettings);
         _resolutionDropdown.onValueChanged.AddListener(OnResolutionChange);
+        _notChangeResolutionButton.onClick.AddListener(NotChangeResolution);
+        _confirmResolutionButton.onClick.AddListener(ChangeResolution);
     }
 
     private void OnDisable()
@@ -52,6 +65,8 @@ public class VideoSettings : MonoBehaviour
         _displayModeDropdown.onValueChanged.RemoveAllListeners();
         _applyButton.onClick.RemoveListener(ApplyVideoSettings);
         _resolutionDropdown.onValueChanged.RemoveListener(OnResolutionChange);
+        _notChangeResolutionButton.onClick.RemoveListener(NotChangeResolution);
+        _confirmResolutionButton.onClick.RemoveListener(ChangeResolution);
     }
 
     private void LoadVideoSettings()
@@ -70,6 +85,8 @@ public class VideoSettings : MonoBehaviour
         _displayModeDropdown.value = _displayMode;
         AddResolutionsOptions();
         _resolutionDropdown.value = _videoManager.ResolutionIndex;
+        _oldResolutionIndex = _videoManager.ResolutionIndex;
+        _isResolutionChanged = false;
     }
 
     private void AddResolutionsOptions()
@@ -86,11 +103,14 @@ public class VideoSettings : MonoBehaviour
         _videoManager.ChangeDisplayMode(_displayMode);
         _videoManager.SetResolution(_resolutionIndex);
         _videoManager.ChangeResolution();
+        if (_isResolutionChanged)
+            ConfirmResolutionChange();
     }
 
     private void OnResolutionChange(int resolutionIndex)
     {
         _resolutionIndex = resolutionIndex;
+        _isResolutionChanged = _resolutionIndex != _oldResolutionIndex;
     }
 
     private void DraggingFramerateSlider(float framerate)
@@ -123,5 +143,26 @@ public class VideoSettings : MonoBehaviour
     private void ChangeDisplayModeDropdown(int displaymode)
     {
         _displayMode = displaymode;
+    }
+
+    private void ConfirmResolutionChange()
+    {
+        _confirmResolutionChange.SetActive(true);
+    }
+
+    private void NotChangeResolution()
+    {
+        _videoManager.RevertResolution();
+        OnResolutionChange(_oldResolutionIndex);
+        _resolutionDropdown.value = _oldResolutionIndex;
+        _isResolutionChanged = false;
+        _confirmResolutionChange.SetActive(false);
+    }
+
+    private void ChangeResolution()
+    {
+        _oldResolutionIndex = _resolutionIndex;
+        _isResolutionChanged = false;
+        _confirmResolutionChange.SetActive(false);
     }
 }
