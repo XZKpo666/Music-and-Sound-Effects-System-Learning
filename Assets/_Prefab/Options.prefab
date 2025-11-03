@@ -5389,8 +5389,6 @@ MonoBehaviour:
     m_Options:
     - m_Text: "\u5168\u7192\u5E55"
       m_Image: {fileID: 0}
-    - m_Text: "\u5168\u7192\u5E55\u8996\u7A97\u5316"
-      m_Image: {fileID: 0}
     - m_Text: "\u7121\u908A\u6846\u8996\u7A97\u5316"
       m_Image: {fileID: 0}
     - m_Text: "\u8996\u7A97\u5316"

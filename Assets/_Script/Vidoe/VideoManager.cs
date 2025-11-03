@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,8 +10,11 @@ public class VideoManager : MonoBehaviour, IGameService
     public int DisplayMode;
     public int ResolutionIndex;
     public Resolution[] Resolutions;
+    public List<string> ResolutionOptions = new List<string>();
     private Resolution _currentResolution;
-    private FullScreenMode _currentFullScreenMode;
+    private FullScreenMode _currentDisplayMode;
+    private List<Resolution> _currentHzResolutions = new List<Resolution>();
+    private RefreshRate _currentRefreshRate = new RefreshRate {};
 
     private void OnEnable()
     {
@@ -24,7 +28,7 @@ public class VideoManager : MonoBehaviour, IGameService
 
     private void Start()
     {
-        Resolutions = Screen.resolutions;
+        LoadResolutionsOptions();
         LoadVideoSettings();
     }
 
@@ -75,16 +79,13 @@ public class VideoManager : MonoBehaviour, IGameService
         switch (displaymode)
         {
             case 0:
-                _currentFullScreenMode = FullScreenMode.ExclusiveFullScreen;
+                _currentDisplayMode = FullScreenMode.FullScreenWindow;
                 break;
             case 1:
-                _currentFullScreenMode = FullScreenMode.FullScreenWindow;
+                _currentDisplayMode = FullScreenMode.MaximizedWindow;
                 break;
             case 2:
-                _currentFullScreenMode = FullScreenMode.MaximizedWindow;
-                break;
-            case 3:
-                _currentFullScreenMode = FullScreenMode.Windowed;
+                _currentDisplayMode = FullScreenMode.Windowed;
                 break;
         }
         DisplayMode = displaymode;
@@ -101,8 +102,28 @@ public class VideoManager : MonoBehaviour, IGameService
         }
     }
 
+    public void LoadResolutionsOptions()
+    {
+        Resolutions = Screen.resolutions;
+        int maxWidth = Screen.currentResolution.width;
+        int maxHeight = Screen.currentResolution.height;
+        foreach (Resolution res in Resolutions)
+        {
+            if (res.width < 800) continue;
+            if (res.width * 9 != res.height * 16) continue;
+            if (res.width > maxWidth || res.height > maxHeight) continue;
+            string option = res.width + " x " + res.height;
+            if (!ResolutionOptions.Contains(option))
+            {
+                ResolutionOptions.Add(option);
+                _currentHzResolutions.Add(res);
+            }
+        }
+        Resolutions = _currentHzResolutions.ToArray();
+    }
+
     public void ChangeResolution()
     {
-        Screen.SetResolution(_currentResolution.width, _currentResolution.height, _currentFullScreenMode, _currentResolution.refreshRateRatio);
+        Screen.SetResolution(_currentResolution.width, _currentResolution.height, _currentDisplayMode, _currentRefreshRate);
     }
 }
