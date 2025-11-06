@@ -26,7 +26,7 @@ public class VideoSettings : MonoBehaviour
     private GameObject _confirmResolutionChange;
 
     [SerializeField]
-    private Button _notChangeResolutionButton;
+    private Button _cancelResolutionButton;
 
     [SerializeField]
     private Button _confirmResolutionButton;
@@ -40,7 +40,7 @@ public class VideoSettings : MonoBehaviour
     private int _displayMode;
     private int _resolutionIndex;
     private int _oldResolutionIndex;
-    private bool _isResolutionChanged = false;
+    private bool _isResolutionChange = false;
     private float _countdownTime = 15f;
 
     private void Start()
@@ -57,8 +57,8 @@ public class VideoSettings : MonoBehaviour
         _displayModeDropdown.onValueChanged.AddListener(ChangeDisplayModeDropdown);
         _applyButton.onClick.AddListener(ApplyVideoSettings);
         _resolutionDropdown.onValueChanged.AddListener(OnResolutionChange);
-        _notChangeResolutionButton.onClick.AddListener(NotChangeResolution);
-        _confirmResolutionButton.onClick.AddListener(ChangeResolution);
+        _cancelResolutionButton.onClick.AddListener(CancelResolution);
+        _confirmResolutionButton.onClick.AddListener(ConfirmResolution);
     }
 
     private void OnDisable()
@@ -69,8 +69,8 @@ public class VideoSettings : MonoBehaviour
         _displayModeDropdown.onValueChanged.RemoveAllListeners();
         _applyButton.onClick.RemoveListener(ApplyVideoSettings);
         _resolutionDropdown.onValueChanged.RemoveListener(OnResolutionChange);
-        _notChangeResolutionButton.onClick.RemoveListener(NotChangeResolution);
-        _confirmResolutionButton.onClick.RemoveListener(ChangeResolution);
+        _cancelResolutionButton.onClick.RemoveListener(CancelResolution);
+        _confirmResolutionButton.onClick.RemoveListener(ConfirmResolution);
     }
 
     private void Update()
@@ -95,7 +95,7 @@ public class VideoSettings : MonoBehaviour
         AddResolutionsOptions();
         _resolutionDropdown.value = _videoManager.ResolutionIndex;
         _oldResolutionIndex = _videoManager.ResolutionIndex;
-        _isResolutionChanged = false;
+        _isResolutionChange = false;
     }
 
     private void AddResolutionsOptions()
@@ -112,14 +112,14 @@ public class VideoSettings : MonoBehaviour
         _videoManager.ChangeDisplayMode(_displayMode);
         _videoManager.SetResolution(_resolutionIndex);
         _videoManager.ChangeResolution();
-        if (_isResolutionChanged)
+        if (_isResolutionChange)
             ConfirmResolutionChange();
     }
 
     private void OnResolutionChange(int resolutionIndex)
     {
         _resolutionIndex = resolutionIndex;
-        _isResolutionChanged = _resolutionIndex != _oldResolutionIndex;
+        _isResolutionChange = _resolutionIndex != _oldResolutionIndex;
     }
 
     private void DraggingFramerateSlider(float framerate)
@@ -159,20 +159,20 @@ public class VideoSettings : MonoBehaviour
         _confirmResolutionChange.SetActive(true);
     }
 
-    private void NotChangeResolution()
+    private void CancelResolution()
     {
         _videoManager.RevertResolution();
         OnResolutionChange(_oldResolutionIndex);
         _resolutionDropdown.value = _oldResolutionIndex;
-        _isResolutionChanged = false;
+        _isResolutionChange = false;
         _confirmResolutionChange.SetActive(false);
         _countdownTime = 15f;
     }
 
-    private void ChangeResolution()
+    private void ConfirmResolution()
     {
         _oldResolutionIndex = _resolutionIndex;
-        _isResolutionChanged = false;
+        _isResolutionChange = false;
         _confirmResolutionChange.SetActive(false);
         _countdownTime = 15f;
     }
@@ -185,7 +185,7 @@ public class VideoSettings : MonoBehaviour
             _countdownText.text = Mathf.Ceil(_countdownTime).ToString() + "秒";
             if (_countdownTime <= 0f)
             {
-                NotChangeResolution();
+                CancelResolution();
                 _countdownTime = 15f;
             }
         }

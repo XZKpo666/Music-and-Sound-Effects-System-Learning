@@ -9109,7 +9109,7 @@ MonoBehaviour:
   _displayModeDropdown: {fileID: 4802367015043835294}
   _resolutionDropdown: {fileID: 6931421953782118824}
   _confirmResolutionChange: {fileID: 3794139463848589253}
-  _notChangeResolutionButton: {fileID: 1076483264873686374}
+  _cancelResolutionButton: {fileID: 1076483264873686374}
   _confirmResolutionButton: {fileID: 4642831625450108554}
   _countdownText: {fileID: 9022310242138769814}
 --- !u!1 &8296782792585108256
