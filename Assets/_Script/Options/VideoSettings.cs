@@ -31,6 +31,9 @@ public class VideoSettings : MonoBehaviour
     [SerializeField]
     private Button _confirmResolutionButton;
 
+    [SerializeField]
+    private Text _countdownText;
+
     private VideoManager _videoManager;
     private bool _isOnVSync;
     private int _framerate;
@@ -38,6 +41,7 @@ public class VideoSettings : MonoBehaviour
     private int _resolutionIndex;
     private int _oldResolutionIndex;
     private bool _isResolutionChanged = false;
+    private float _countdownTime = 15f;
 
     private void Start()
     {
@@ -67,6 +71,11 @@ public class VideoSettings : MonoBehaviour
         _resolutionDropdown.onValueChanged.RemoveListener(OnResolutionChange);
         _notChangeResolutionButton.onClick.RemoveListener(NotChangeResolution);
         _confirmResolutionButton.onClick.RemoveListener(ChangeResolution);
+    }
+
+    private void Update()
+    {
+        CountdownToRevertResolution();
     }
 
     private void LoadVideoSettings()
@@ -157,6 +166,7 @@ public class VideoSettings : MonoBehaviour
         _resolutionDropdown.value = _oldResolutionIndex;
         _isResolutionChanged = false;
         _confirmResolutionChange.SetActive(false);
+        _countdownTime = 15f;
     }
 
     private void ChangeResolution()
@@ -164,5 +174,20 @@ public class VideoSettings : MonoBehaviour
         _oldResolutionIndex = _resolutionIndex;
         _isResolutionChanged = false;
         _confirmResolutionChange.SetActive(false);
+        _countdownTime = 15f;
+    }
+
+    private void CountdownToRevertResolution()
+    {
+        if (_confirmResolutionChange.activeSelf)
+        {
+            _countdownTime -= Time.deltaTime;
+            _countdownText.text = Mathf.Ceil(_countdownTime).ToString() + "秒";
+            if (_countdownTime <= 0f)
+            {
+                NotChangeResolution();
+                _countdownTime = 15f;
+            }
+        }
     }
 }
