@@ -62,7 +62,7 @@ public class KeyBoardSettings : MonoBehaviour
 
     private void UpdateKeyDisplay()
     {
-        InputAction action = _keyBoardRebindManager._playerInput.actions["Move"];
+        InputAction action = _keyBoardRebindManager.PlayerInput.actions["Move"];
         _remapForwardButtonText.text = GetBindingPathDisplayName(action.bindings[4]);
         _remapBackwardButtonText.text = GetBindingPathDisplayName(action.bindings[5]);
         _remapLeftButtonText.text = GetBindingPathDisplayName(action.bindings[2]);
@@ -79,8 +79,7 @@ public class KeyBoardSettings : MonoBehaviour
 
     private void RestoreDefaultsClicked()
     {
-        _keyBoardRebindManager._playerInput.actions.RemoveAllBindingOverrides();
-        _keyBoardRebindManager.SaveRebinds();
+        _keyBoardRebindManager.RestoreDefaults();
         UpdateKeyDisplay();
     }
 

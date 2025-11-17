@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 public class KeyBoardRebindManager : MonoBehaviour, IGameService
 {
-    public PlayerInput _playerInput;
+    public PlayerInput PlayerInput;
     private InputActionRebindingExtensions.RebindingOperation _currentRebind;
 
     private void OnEnable()
@@ -23,9 +23,9 @@ public class KeyBoardRebindManager : MonoBehaviour, IGameService
 
     public void RemapButtonClicked(string actionName, int bindingIndex,  System.Action<string> onComplete)
     {
-        _playerInput.actions.FindActionMap("Player").Disable(); // 停用 Player 動作以避免干擾
+        PlayerInput.actions.FindActionMap("Player").Disable(); // 停用 Player 動作以避免干擾
 
-        InputAction action = _playerInput.actions[actionName];
+        InputAction action = PlayerInput.actions[actionName];
         _currentRebind = action.PerformInteractiveRebinding()
             .WithControlsExcluding("Mouse")
             .WithTargetBinding(bindingIndex)
@@ -39,7 +39,7 @@ public class KeyBoardRebindManager : MonoBehaviour, IGameService
                 // 回傳目前的按鍵路徑（給 UI 更新顯示）
                 onComplete?.Invoke(GetBindingPathDisplayName(action.bindings[bindingIndex]));
 
-                _playerInput.actions.FindActionMap("Player").Enable(); // 重新啟用 Player 動作
+                PlayerInput.actions.FindActionMap("Player").Enable(); // 重新啟用 Player 動作
             });
 
         _currentRebind.Start();
@@ -53,19 +53,24 @@ public class KeyBoardRebindManager : MonoBehaviour, IGameService
         );
     }
 
-    public void SaveRebinds()
+    private void SaveRebinds()
     {
-        string rebinds = _playerInput.actions.SaveBindingOverridesAsJson();
+        string rebinds = PlayerInput.actions.SaveBindingOverridesAsJson();
         PlayerPrefs.SetString("rebinds", rebinds);
     }
 
-    public void LoadRebinds()
+    private void LoadRebinds()
     {
         if (!PlayerPrefs.HasKey("rebinds"))
             return;
 
         string rebinds = PlayerPrefs.GetString("rebinds");
-        _playerInput.actions.LoadBindingOverridesFromJson(rebinds);
+        PlayerInput.actions.LoadBindingOverridesFromJson(rebinds);
     }
 
+    public void RestoreDefaults()
+    {
+        PlayerInput.actions.RemoveAllBindingOverrides();
+        SaveRebinds();
+    }
 }
