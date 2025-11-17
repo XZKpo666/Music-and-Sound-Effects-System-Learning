@@ -4,8 +4,9 @@ using System.Collections;
 
 public class LevelLoader : MonoBehaviour, IGameService
 {
-    public Animator _transitionAnimator; 
+    public Animator _transitionAnimator;
     public float _transitionTime = 1f; 
+    public bool _isInGame = false;
     
     private void OnEnable()
     {
@@ -15,6 +16,18 @@ public class LevelLoader : MonoBehaviour, IGameService
     private void OnDisable()
     {
         ServiceLocator.Instance.RemoveService<LevelLoader>(false);
+    }
+
+    private void Start()
+    {
+        if (SceneManager.GetActiveScene().name == "InGame")
+        {
+            _isInGame = true;
+        }
+        else
+        {
+            _isInGame = false;
+        }   
     }
 
     public void LoadLevel(int scencemode)
