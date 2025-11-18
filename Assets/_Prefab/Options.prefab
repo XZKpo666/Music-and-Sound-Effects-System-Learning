@@ -4719,6 +4719,7 @@ MonoBehaviour:
   _remapLeftButtonText: {fileID: 6692973314306974834}
   _remapRightButton: {fileID: 7854928766516940482}
   _remapRightButtonText: {fileID: 5506691104051708872}
+  _moveAction: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
 --- !u!1 &3224622901851729933
 GameObject:
   m_ObjectHideFlags: 0

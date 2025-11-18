@@ -14,7 +14,7 @@ public class KeyBoardSettings : MonoBehaviour
     private Button _remapForwardButton;
 
     [SerializeField]
-    private Text _remapForwardButtonText;
+    private Text _remapForwardButtonText;   
 
     [SerializeField]
     private Button _remapBackwardButton;
@@ -34,7 +34,10 @@ public class KeyBoardSettings : MonoBehaviour
     [SerializeField]
     private Text _remapRightButtonText;
 
-    private KeyBoardRebindManager _keyBoardRebindManager;
+    [SerializeField]
+    private InputActionReference _moveAction;
+
+    private KeyBoardRebindManager _keyBoardRebindManager; 
 
     private void Start()
     {
@@ -62,11 +65,16 @@ public class KeyBoardSettings : MonoBehaviour
 
     private void UpdateKeyDisplay()
     {
-        InputAction action = _keyBoardRebindManager.PlayerInput.actions["Move"];
-        _remapForwardButtonText.text = GetBindingPathDisplayName(action.bindings[4]);
-        _remapBackwardButtonText.text = GetBindingPathDisplayName(action.bindings[5]);
-        _remapLeftButtonText.text = GetBindingPathDisplayName(action.bindings[2]);
-        _remapRightButtonText.text = GetBindingPathDisplayName(action.bindings[3]);
+        KeyDisplay(_moveAction, 4, _remapForwardButtonText);
+        KeyDisplay(_moveAction, 5, _remapBackwardButtonText);
+        KeyDisplay(_moveAction, 2, _remapLeftButtonText);
+        KeyDisplay(_moveAction, 3, _remapRightButtonText);
+    }
+
+    private void KeyDisplay(InputActionReference actionReference, int bindingIndex, Text buttonText)
+    {
+        InputAction action = actionReference.action;
+        buttonText.text = GetBindingPathDisplayName(action.bindings[bindingIndex]);
     }
 
     private string GetBindingPathDisplayName(InputBinding binding)
@@ -85,48 +93,32 @@ public class KeyBoardSettings : MonoBehaviour
 
     private void ForwardRemapClicked()
     {
-        _disableClickBlocker.SetActive(true);
-        _remapForwardButtonText.text = "...";
-
-        _keyBoardRebindManager.RemapButtonClicked("Move", 4, newKeyPath =>
-        {
-            _remapForwardButtonText.text = newKeyPath;
-            _disableClickBlocker.SetActive(false);
-        });  
+        RemapClicked(_moveAction, 4, _remapForwardButtonText); 
     }
 
     private void BackwardRemapClicked()
     {
-        _disableClickBlocker.SetActive(true);
-        _remapBackwardButtonText.text = "...";
-
-        _keyBoardRebindManager.RemapButtonClicked("Move", 5, newKeyPath =>
-        {
-            _remapBackwardButtonText.text = newKeyPath;
-            _disableClickBlocker.SetActive(false);
-        });
+        RemapClicked(_moveAction, 5, _remapBackwardButtonText);
     }
 
     private void LeftRemapClicked()
     {
-        _disableClickBlocker.SetActive(true);
-        _remapLeftButtonText.text = "...";
-
-        _keyBoardRebindManager.RemapButtonClicked("Move", 2, newKeyPath =>
-        {
-            _remapLeftButtonText.text = newKeyPath;
-            _disableClickBlocker.SetActive(false);
-        });
+        RemapClicked(_moveAction, 2, _remapLeftButtonText);
     }
 
     private void RightRemapClicked()
     {
-        _disableClickBlocker.SetActive(true);
-        _remapRightButtonText.text = "...";
+        RemapClicked(_moveAction, 3, _remapRightButtonText);
+    }
 
-        _keyBoardRebindManager.RemapButtonClicked("Move", 3, newKeyPath =>
+    private void RemapClicked(InputActionReference inputAction, int bindingIndex, Text buttonText)
+    {
+        _disableClickBlocker.SetActive(true);
+        buttonText.text = "...";
+
+        _keyBoardRebindManager.RemapButtonClicked(inputAction, bindingIndex, newKeyPath =>
         {
-            _remapRightButtonText.text = newKeyPath;
+            buttonText.text = newKeyPath;
             _disableClickBlocker.SetActive(false);
         });
     }

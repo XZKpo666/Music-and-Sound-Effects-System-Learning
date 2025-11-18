@@ -3,8 +3,10 @@ using UnityEngine.InputSystem;
 
 public class KeyBoardRebindManager : MonoBehaviour, IGameService
 {
-    public PlayerInput PlayerInput;
+    [SerializeField]
+    private InputActionAsset _inputActionAsset;
     private InputActionRebindingExtensions.RebindingOperation _currentRebind;
+    private string _rebinds;
 
     private void OnEnable()
     {
@@ -21,25 +23,24 @@ public class KeyBoardRebindManager : MonoBehaviour, IGameService
         LoadRebinds();
     }
 
-    public void RemapButtonClicked(string actionName, int bindingIndex,  System.Action<string> onComplete)
+    public void RemapButtonClicked(InputActionReference inputAction, int bindingIndex,  System.Action<string> onComplete)
     {
-        PlayerInput.actions.FindActionMap("Player").Disable(); // 停用 Player 動作以避免干擾
-
-        InputAction action = PlayerInput.actions[actionName];
+        _inputActionAsset.FindActionMap("Player").Disable(); // 停用 Player 動作以避免干擾
+        
+        InputAction action = inputAction.action;
         _currentRebind = action.PerformInteractiveRebinding()
-            .WithControlsExcluding("Mouse")
             .WithTargetBinding(bindingIndex)
             .OnMatchWaitForAnother(0.1f)
             .OnComplete(operation =>
             {
                 operation.Dispose();
                 SaveRebinds();
-                Debug.Log($"{actionName} rebind complete.");
+                Debug.Log($"{inputAction.name} rebind complete.");
                 
                 // 回傳目前的按鍵路徑（給 UI 更新顯示）
                 onComplete?.Invoke(GetBindingPathDisplayName(action.bindings[bindingIndex]));
 
-                PlayerInput.actions.FindActionMap("Player").Enable(); // 重新啟用 Player 動作
+                _inputActionAsset.FindActionMap("Player").Enable(); // 重新啟用 Player 動作
             });
 
         _currentRebind.Start();
@@ -55,8 +56,8 @@ public class KeyBoardRebindManager : MonoBehaviour, IGameService
 
     private void SaveRebinds()
     {
-        string rebinds = PlayerInput.actions.SaveBindingOverridesAsJson();
-        PlayerPrefs.SetString("rebinds", rebinds);
+        _rebinds = _inputActionAsset.SaveBindingOverridesAsJson();
+        PlayerPrefs.SetString("rebinds", _rebinds);
     }
 
     private void LoadRebinds()
@@ -64,13 +65,13 @@ public class KeyBoardRebindManager : MonoBehaviour, IGameService
         if (!PlayerPrefs.HasKey("rebinds"))
             return;
 
-        string rebinds = PlayerPrefs.GetString("rebinds");
-        PlayerInput.actions.LoadBindingOverridesFromJson(rebinds);
+        _rebinds = PlayerPrefs.GetString("rebinds");
+        _inputActionAsset.LoadBindingOverridesFromJson(_rebinds);
     }
 
     public void RestoreDefaults()
     {
-        PlayerInput.actions.RemoveAllBindingOverrides();
+        _inputActionAsset.RemoveAllBindingOverrides();
         SaveRebinds();
     }
 }
