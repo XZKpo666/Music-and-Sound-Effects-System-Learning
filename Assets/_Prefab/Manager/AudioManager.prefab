@@ -67,4 +67,8 @@ MonoBehaviour:
     Loop: 1
   _audioSourcePrefab: {fileID: 5313263995835969531, guid: 01b32f3d2f9415a4b9a1f60cec1c4fb5, type: 3}
   _volumeMixer: {fileID: 24100000, guid: 4d8720dc56027384c9a0e7fe41fb7f16, type: 2}
-  FadeDuration: 1
+  _fadeInDuration: 1
+  _fadeOutDuration: 1
+  MasterVolume: 0
+  MusicVolume: 0
+  SfxVolume: 0

@@ -3833,6 +3833,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 665855077347523238}
+  - component: {fileID: 7124403800093686225}
   m_Layer: 5
   m_Name: Backward
   m_TagString: Untagged
@@ -3861,6 +3862,19 @@ RectTransform:
   m_AnchoredPosition: {x: 195, y: -60}
   m_SizeDelta: {x: 390, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &7124403800093686225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2551328902345737348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3204ff47f005bd04fa84b3326c80fb27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RemapKeyButton
+  RebindButton: {fileID: 1288047963685597708}
 --- !u!1 &2690744652224918081
 GameObject:
   m_ObjectHideFlags: 0
@@ -4711,15 +4725,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::KeyBoardSettings
   _restoreDefaultsButton: {fileID: 7388951572922819041}
   _disableClickBlocker: {fileID: 6328881764347178841}
-  _remapForwardButton: {fileID: 6510344829270490965}
-  _remapForwardButtonText: {fileID: 2477473140877655668}
-  _remapBackwardButton: {fileID: 1288047963685597708}
-  _remapBackwardButtonText: {fileID: 6646101954083890552}
-  _remapLeftButton: {fileID: 7240830404862099482}
-  _remapLeftButtonText: {fileID: 6692973314306974834}
-  _remapRightButton: {fileID: 7854928766516940482}
-  _remapRightButtonText: {fileID: 5506691104051708872}
-  _moveAction: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  _keyBoardRebindButtons:
+  - RebindButton: {fileID: 3191376908867091428}
+    Action: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+    BindingIndex: 4
+    KeyDisplayText: {fileID: 2477473140877655668}
+  - RebindButton: {fileID: 7124403800093686225}
+    Action: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+    BindingIndex: 5
+    KeyDisplayText: {fileID: 6646101954083890552}
+  - RebindButton: {fileID: 6502706174340280233}
+    Action: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+    BindingIndex: 2
+    KeyDisplayText: {fileID: 6692973314306974834}
+  - RebindButton: {fileID: 8656149223576039607}
+    Action: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+    BindingIndex: 3
+    KeyDisplayText: {fileID: 5506691104051708872}
 --- !u!1 &3224622901851729933
 GameObject:
   m_ObjectHideFlags: 0
@@ -6326,6 +6348,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4448866252033976450}
+  - component: {fileID: 6502706174340280233}
   m_Layer: 5
   m_Name: Left
   m_TagString: Untagged
@@ -6354,6 +6377,19 @@ RectTransform:
   m_AnchoredPosition: {x: 195, y: -100}
   m_SizeDelta: {x: 390, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &6502706174340280233
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4674558849231717649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3204ff47f005bd04fa84b3326c80fb27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RemapKeyButton
+  RebindButton: {fileID: 7240830404862099482}
 --- !u!1 &4719866734808354659
 GameObject:
   m_ObjectHideFlags: 0
@@ -8808,6 +8844,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6358186253219024355}
+  - component: {fileID: 8656149223576039607}
   m_Layer: 5
   m_Name: Right
   m_TagString: Untagged
@@ -8836,6 +8873,19 @@ RectTransform:
   m_AnchoredPosition: {x: 195, y: -140}
   m_SizeDelta: {x: 390, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &8656149223576039607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6895132541689925057}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3204ff47f005bd04fa84b3326c80fb27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RemapKeyButton
+  RebindButton: {fileID: 7854928766516940482}
 --- !u!1 &7054743102838019763
 GameObject:
   m_ObjectHideFlags: 0
@@ -9879,6 +9929,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1668353610639658342}
+  - component: {fileID: 3191376908867091428}
   m_Layer: 5
   m_Name: Forward
   m_TagString: Untagged
@@ -9907,6 +9958,19 @@ RectTransform:
   m_AnchoredPosition: {x: 195, y: -20}
   m_SizeDelta: {x: 390, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &3191376908867091428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7654705567141331474}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3204ff47f005bd04fa84b3326c80fb27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RemapKeyButton
+  RebindButton: {fileID: 6510344829270490965}
 --- !u!1 &8007670581653454143
 GameObject:
   m_ObjectHideFlags: 0
