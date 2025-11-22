@@ -10,8 +10,10 @@ public class RemapKeyButton : MonoBehaviour
     private InputActionReference Action;
     private int BindingIndex;
     private Text DisplayText;
-    private GameObject _disableClickBlocker;
     private KeyBoardRebindManager _keyBoardRebindManager;
+
+    public System.Action OnRebindStarted;
+    public System.Action OnRebindComplete;
 
     private void OnEnable()
     {
@@ -23,12 +25,11 @@ public class RemapKeyButton : MonoBehaviour
         RebindButton.onClick.RemoveListener(RemapClicked);
     }
 
-    public void Init(InputActionReference action, int bindingIndex, Text displayText, GameObject disableClickBlocker)
+    public void Init(InputActionReference action, int bindingIndex, Text displayText)
     {
         Action = action;
         BindingIndex = bindingIndex;
         DisplayText = displayText;
-        _disableClickBlocker = disableClickBlocker;
     }
 
     private void Start()
@@ -38,13 +39,14 @@ public class RemapKeyButton : MonoBehaviour
 
     private void RemapClicked()
     {
-        _disableClickBlocker.SetActive(true);
+        OnRebindStarted?.Invoke();
+
         DisplayText.text = "...";
 
         _keyBoardRebindManager.RemapButtonClicked(Action, BindingIndex, newKeyPath =>
         {
             DisplayText.text = newKeyPath;
-            _disableClickBlocker.SetActive(false);
+            OnRebindComplete?.Invoke();
         });
     }
 }

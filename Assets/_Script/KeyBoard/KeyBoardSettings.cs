@@ -24,11 +24,12 @@ public class KeyBoardSettings : MonoBehaviour
             _keyBoardRebindDatas[i].RebindButton.Init(
                 _keyBoardRebindDatas[i].Action, 
                 _keyBoardRebindDatas[i].BindingIndex, 
-                _keyBoardRebindDatas[i].KeyDisplayText, 
-                _disableClickBlocker);
+                _keyBoardRebindDatas[i].KeyDisplayText);
         }
 
         UpdateKeyDisplay();
+
+        DisableClickBlockerIsActive();
     }
 
     private void OnEnable()
@@ -41,6 +42,22 @@ public class KeyBoardSettings : MonoBehaviour
         _restoreDefaultsButton.onClick.RemoveListener(RestoreDefaultsClicked);
     }
 
+    private void DisableClickBlockerIsActive()
+    {
+        foreach (var btn in _keyBoardRebindDatas)
+        {
+            btn.RebindButton.OnRebindStarted += () =>
+            {
+                _disableClickBlocker.SetActive(true);
+            };
+
+            btn.RebindButton.OnRebindComplete += () =>
+            {
+                _disableClickBlocker.SetActive(false);
+            };
+        }
+    }
+
     private void UpdateKeyDisplay()
     {
         for (int i = 0; i < _keyBoardRebindDatas.Length; i++)
@@ -49,7 +66,7 @@ public class KeyBoardSettings : MonoBehaviour
             _keyBoardRebindDatas[i].BindingIndex,
             _keyBoardRebindDatas[i].KeyDisplayText);
         }
-    }
+    } 
 
     private void KeyDisplay(InputActionReference actionReference, int bindingIndex, Text buttonText)
     {
@@ -70,5 +87,4 @@ public class KeyBoardSettings : MonoBehaviour
         _keyBoardRebindManager.RestoreDefaults();
         UpdateKeyDisplay();
     }
-
 }
