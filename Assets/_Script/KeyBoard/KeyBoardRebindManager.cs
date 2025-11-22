@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,6 +8,8 @@ public class KeyBoardRebindManager : MonoBehaviour, IGameService
     private InputActionAsset _inputActionAsset;
     private InputActionRebindingExtensions.RebindingOperation _currentRebind;
     private string _rebinds;
+    public event Action OnRebindStarted;
+    public event Action OnRebindComplete;
 
     private void OnEnable()
     {
@@ -26,7 +29,7 @@ public class KeyBoardRebindManager : MonoBehaviour, IGameService
     public void RemapButtonClicked(InputActionReference inputAction, int bindingIndex,  System.Action<string> onComplete)
     {
         _inputActionAsset.FindActionMap("Player").Disable(); // 停用 Player 動作以避免干擾
-        
+        OnRebindStarted?.Invoke();
         InputAction action = inputAction.action;
         _currentRebind = action.PerformInteractiveRebinding()
             .WithTargetBinding(bindingIndex)
@@ -39,7 +42,7 @@ public class KeyBoardRebindManager : MonoBehaviour, IGameService
                 
                 // 回傳目前的按鍵路徑（給 UI 更新顯示）
                 onComplete?.Invoke(GetBindingPathDisplayName(action.bindings[bindingIndex]));
-
+                OnRebindComplete?.Invoke();
                 _inputActionAsset.FindActionMap("Player").Enable(); // 重新啟用 Player 動作
             });
 

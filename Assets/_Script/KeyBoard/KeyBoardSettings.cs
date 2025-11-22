@@ -15,10 +15,24 @@ public class KeyBoardSettings : MonoBehaviour
     
     private KeyBoardRebindManager _keyBoardRebindManager; 
 
-    private void Start()
+    private void OnEnable()
     {
         _keyBoardRebindManager = ServiceLocator.Instance.GetService<KeyBoardRebindManager>();
+        _restoreDefaultsButton.onClick.AddListener(RestoreDefaultsClicked);    
+        _keyBoardRebindManager.OnRebindStarted += HandleRebindStarted;
+        _keyBoardRebindManager.OnRebindComplete += HandleRebindComplete;
 
+    }
+
+    private void OnDisable()
+    {
+        _restoreDefaultsButton.onClick.RemoveListener(RestoreDefaultsClicked);
+        _keyBoardRebindManager.OnRebindStarted -= HandleRebindStarted;
+        _keyBoardRebindManager.OnRebindComplete -= HandleRebindComplete;
+    }
+
+    private void Start()
+    {
         for (int i = 0; i < _keyBoardRebindDatas.Length; i++)
         {
             _keyBoardRebindDatas[i].RebindButton.Init(
@@ -28,34 +42,16 @@ public class KeyBoardSettings : MonoBehaviour
         }
 
         UpdateKeyDisplay();
-
-        DisableClickBlockerIsActive();
     }
 
-    private void OnEnable()
+    private void HandleRebindStarted()
     {
-        _restoreDefaultsButton.onClick.AddListener(RestoreDefaultsClicked);       
+        _disableClickBlocker.SetActive(true);
     }
 
-    private void OnDisable()
+    private void HandleRebindComplete()
     {
-        _restoreDefaultsButton.onClick.RemoveListener(RestoreDefaultsClicked);
-    }
-
-    private void DisableClickBlockerIsActive()
-    {
-        foreach (var btn in _keyBoardRebindDatas)
-        {
-            btn.RebindButton.OnRebindStarted += () =>
-            {
-                _disableClickBlocker.SetActive(true);
-            };
-
-            btn.RebindButton.OnRebindComplete += () =>
-            {
-                _disableClickBlocker.SetActive(false);
-            };
-        }
+        _disableClickBlocker.SetActive(false);
     }
 
     private void UpdateKeyDisplay()
