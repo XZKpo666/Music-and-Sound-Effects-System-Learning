@@ -5,31 +5,29 @@ using UnityEngine.UI;
 public class RemapKeyButton : MonoBehaviour
 {      
     [SerializeField]
-    private Button RebindButton;
+    private Button _rebindButton;
 
-    private InputActionReference Action;
-    private int BindingIndex;
-    private Text DisplayText;
+    [SerializeField]
+    private Text _displayText;
+
+    private InputActionReference _action;
+    private int _bindingIndex;
+    
     private KeyBoardRebindManager _keyBoardRebindManager;
-
-    public System.Action OnRebindStarted;
-    public System.Action OnRebindComplete;
-
     private void OnEnable()
     {
-        RebindButton.onClick.AddListener(RemapClicked);
+        _rebindButton.onClick.AddListener(RemapClicked);
     }
 
     private void OnDisable()
     {
-        RebindButton.onClick.RemoveListener(RemapClicked);
+        _rebindButton.onClick.RemoveListener(RemapClicked);
     }
 
-    public void Init(InputActionReference action, int bindingIndex, Text displayText)
+    public void Init(InputActionReference action, int bindingIndex)
     {
-        Action = action;
-        BindingIndex = bindingIndex;
-        DisplayText = displayText;
+        _action = action;
+        _bindingIndex = bindingIndex;
     }
 
     private void Start()
@@ -39,14 +37,11 @@ public class RemapKeyButton : MonoBehaviour
 
     private void RemapClicked()
     {
-        OnRebindStarted?.Invoke();
+        _displayText.text = "...";
 
-        DisplayText.text = "...";
-
-        _keyBoardRebindManager.RemapButtonClicked(Action, BindingIndex, newKeyPath =>
+        _keyBoardRebindManager.RemapButtonClicked(_action, _bindingIndex, newKeyPath =>
         {
-            DisplayText.text = newKeyPath;
-            OnRebindComplete?.Invoke();
+            _displayText.text = newKeyPath;
         });
     }
 }

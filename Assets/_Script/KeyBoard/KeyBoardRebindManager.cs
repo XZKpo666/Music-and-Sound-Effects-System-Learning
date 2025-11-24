@@ -26,7 +26,7 @@ public class KeyBoardRebindManager : MonoBehaviour, IGameService
         LoadRebinds();
     }
 
-    public void RemapButtonClicked(InputActionReference inputAction, int bindingIndex,  System.Action<string> onComplete)
+    public void RemapButtonClicked(InputActionReference inputAction, int bindingIndex,  Action<string> onComplete)
     {
         _inputActionAsset.FindActionMap("Player").Disable(); // 停用 Player 動作以避免干擾
         OnRebindStarted?.Invoke();

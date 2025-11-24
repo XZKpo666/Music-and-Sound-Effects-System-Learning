@@ -33,14 +33,7 @@ public class KeyBoardSettings : MonoBehaviour
 
     private void Start()
     {
-        for (int i = 0; i < _keyBoardRebindDatas.Length; i++)
-        {
-            _keyBoardRebindDatas[i].RebindButton.Init(
-                _keyBoardRebindDatas[i].Action, 
-                _keyBoardRebindDatas[i].BindingIndex, 
-                _keyBoardRebindDatas[i].KeyDisplayText);
-        }
-
+        SendDataToRemapButton();
         UpdateKeyDisplay();
     }
 
@@ -52,6 +45,16 @@ public class KeyBoardSettings : MonoBehaviour
     private void HandleRebindComplete()
     {
         _disableClickBlocker.SetActive(false);
+    }
+
+    private void SendDataToRemapButton()
+    {
+        for (int i = 0; i < _keyBoardRebindDatas.Length; i++)
+        {
+            _keyBoardRebindDatas[i].RebindButton.Init(
+                _keyBoardRebindDatas[i].Action, 
+                _keyBoardRebindDatas[i].BindingIndex);
+        }
     }
 
     private void UpdateKeyDisplay()
