@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 
-public class KeyBoardSettings : MonoBehaviour
+public class KeyboardSettings : MonoBehaviour
 {
     [SerializeField]
     private Button _restoreDefaultsButton;
@@ -11,24 +11,24 @@ public class KeyBoardSettings : MonoBehaviour
     private GameObject _disableClickBlocker; 
 
     [SerializeField]
-    private KeyBoardRebindData[] _keyBoardRebindDatas;
+    private RebindData[] _rebindDatas;
     
-    private KeyBoardRebindManager _keyBoardRebindManager; 
+    private InputRebindManager _inputRebindManager; 
 
     private void OnEnable()
     {
-        _keyBoardRebindManager = ServiceLocator.Instance.GetService<KeyBoardRebindManager>();
+        _inputRebindManager = ServiceLocator.Instance.GetService<InputRebindManager>();
         _restoreDefaultsButton.onClick.AddListener(RestoreDefaultsClicked);    
-        _keyBoardRebindManager.OnRebindStarted += HandleRebindStarted;
-        _keyBoardRebindManager.OnRebindComplete += HandleRebindComplete;
+        _inputRebindManager.OnRebindStarted += HandleRebindStarted;
+        _inputRebindManager.OnRebindComplete += HandleRebindComplete;
 
     }
 
     private void OnDisable()
     {
         _restoreDefaultsButton.onClick.RemoveListener(RestoreDefaultsClicked);
-        _keyBoardRebindManager.OnRebindStarted -= HandleRebindStarted;
-        _keyBoardRebindManager.OnRebindComplete -= HandleRebindComplete;
+        _inputRebindManager.OnRebindStarted -= HandleRebindStarted;
+        _inputRebindManager.OnRebindComplete -= HandleRebindComplete;
     }
 
     private void Start()
@@ -49,21 +49,22 @@ public class KeyBoardSettings : MonoBehaviour
 
     private void SendDataToRemapButton()
     {
-        for (int i = 0; i < _keyBoardRebindDatas.Length; i++)
+        for (int i = 0; i < _rebindDatas.Length; i++)
         {
-            _keyBoardRebindDatas[i].RebindButton.Init(
-                _keyBoardRebindDatas[i].Action, 
-                _keyBoardRebindDatas[i].BindingIndex);
+            _rebindDatas[i].RebindButton.Init(
+                _rebindDatas[i].Action, 
+                _rebindDatas[i].BindingIndex,
+                false);
         }
     }
 
     private void UpdateKeyDisplay()
     {
-        for (int i = 0; i < _keyBoardRebindDatas.Length; i++)
+        for (int i = 0; i < _rebindDatas.Length; i++)
         {
-            KeyDisplay(_keyBoardRebindDatas[i].Action,
-            _keyBoardRebindDatas[i].BindingIndex,
-            _keyBoardRebindDatas[i].KeyDisplayText);
+            KeyDisplay(_rebindDatas[i].Action,
+            _rebindDatas[i].BindingIndex,
+            _rebindDatas[i].KeyDisplayText);
         }
     } 
 
@@ -83,7 +84,7 @@ public class KeyBoardSettings : MonoBehaviour
 
     private void RestoreDefaultsClicked()
     {
-        _keyBoardRebindManager.RestoreDefaults();
+        _inputRebindManager.ResetKeyboardSettings();
         UpdateKeyDisplay();
     }
 }

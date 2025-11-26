@@ -9,7 +9,7 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody _rigidbody;
 
     private InputManager _inputManager;    
-    private Vector3 _moveDirection = Vector3.zero;
+    private Vector2 _moveDirection;
 
     private void OnEnable()
     {
@@ -28,11 +28,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        _moveDirection = _inputManager._playerMovement.action.ReadValue<Vector3>();
+        _moveDirection = _inputManager._playerMovement.action.ReadValue<Vector2>();
     }
 
     private void FixedUpdate()
     {
-        _rigidbody.linearVelocity = new Vector3(_moveDirection.x * _speed, _moveDirection.y * _speed, _moveDirection.z * _speed);
+        _rigidbody.linearVelocity = new Vector3(_moveDirection.x * _speed, 0, _moveDirection.y * _speed);
     }
 }

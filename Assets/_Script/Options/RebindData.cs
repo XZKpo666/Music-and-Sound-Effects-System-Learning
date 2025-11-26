@@ -4,9 +4,9 @@ using UnityEngine.InputSystem;
 
 
 [System.Serializable]
-public class KeyBoardRebindData
+public class RebindData
 {
-    public RemapKeyButton RebindButton;
+    public RebindButton RebindButton;
     public InputActionReference Action;
     public int BindingIndex;
     public Text KeyDisplayText;

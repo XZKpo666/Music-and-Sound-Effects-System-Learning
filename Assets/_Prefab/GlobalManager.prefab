@@ -479,7 +479,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4604128184048544890, guid: 7525a822dec0fcb4495718240a649456, type: 3}
       propertyPath: m_Name
-      value: KeyboardRebindManager
+      value: InputRebindManager
       objectReference: {fileID: 0}
     - target: {fileID: 4893554988417219295, guid: 7525a822dec0fcb4495718240a649456, type: 3}
       propertyPath: _inputActionAsset
