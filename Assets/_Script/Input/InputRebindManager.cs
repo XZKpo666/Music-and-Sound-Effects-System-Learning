@@ -80,7 +80,7 @@ public class InputRebindManager : MonoBehaviour, IGameService
         _currentRebind.Start();
     }
 
-    private string GetBindingPathDisplayName(InputBinding binding)
+    public string GetBindingPathDisplayName(InputBinding binding)
     {
         return InputControlPath.ToHumanReadableString(
         binding.effectivePath,

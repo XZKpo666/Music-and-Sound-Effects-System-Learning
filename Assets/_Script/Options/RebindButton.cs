@@ -7,8 +7,7 @@ public class RebindButton : MonoBehaviour
     [SerializeField]
     private Button _rebindButton;
 
-    [SerializeField]
-    private Text _displayText;
+    public Text DisplayText;
     
     private InputActionReference _action;
     private int _bindingIndex;
@@ -35,25 +34,31 @@ public class RebindButton : MonoBehaviour
     private void Start()
     {
         _inputRebindManager = ServiceLocator.Instance.GetService<InputRebindManager>();
+        UpdateKeyDisplay();
     }
 
     private void RemapClicked()
     {
-        _displayText.text = "...";
+        DisplayText.text = "...";
 
         if (_isGamepadSettings == true)
         {
             _inputRebindManager.RemapGamepadButtonClicked(_action, _bindingIndex, newKeyPath =>
             {
-                _displayText.text = newKeyPath;
+                DisplayText.text = newKeyPath;
             });
         }
         else
         {
             _inputRebindManager.RemapKeyboardButtonClicked(_action, _bindingIndex, newKeyPath =>
             {
-                _displayText.text = newKeyPath;
+                DisplayText.text = newKeyPath;
             });
         }
+    }
+
+    private void UpdateKeyDisplay()
+    {
+        DisplayText.text = _inputRebindManager.GetBindingPathDisplayName(_action.action.bindings[_bindingIndex]);
     }
 }

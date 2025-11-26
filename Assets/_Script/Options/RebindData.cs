@@ -9,5 +9,4 @@ public class RebindData
     public RebindButton RebindButton;
     public InputActionReference Action;
     public int BindingIndex;
-    public Text KeyDisplayText;
 }

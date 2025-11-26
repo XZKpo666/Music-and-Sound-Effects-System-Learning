@@ -251,7 +251,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RemapKeyButton
   _rebindButton: {fileID: 7647578145926850234}
-  _displayText: {fileID: 1304077265526597531}
+  DisplayText: {fileID: 1304077265526597531}
 --- !u!1 &8102687636082745319
 GameObject:
   m_ObjectHideFlags: 0

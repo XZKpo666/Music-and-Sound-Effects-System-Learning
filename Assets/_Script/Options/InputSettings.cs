@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 
-public class KeyboardSettings : MonoBehaviour
+public class InputSettings : MonoBehaviour
 {
     [SerializeField]
     private Button _restoreDefaultsButton;
@@ -12,8 +12,11 @@ public class KeyboardSettings : MonoBehaviour
 
     [SerializeField]
     private RebindData[] _rebindDatas;
+
+    [SerializeField]
+    private bool _isGamepadSettings; 
     
-    private InputRebindManager _inputRebindManager; 
+    private InputRebindManager _inputRebindManager;
 
     private void OnEnable()
     {
@@ -21,7 +24,6 @@ public class KeyboardSettings : MonoBehaviour
         _restoreDefaultsButton.onClick.AddListener(RestoreDefaultsClicked);    
         _inputRebindManager.OnRebindStarted += HandleRebindStarted;
         _inputRebindManager.OnRebindComplete += HandleRebindComplete;
-
     }
 
     private void OnDisable()
@@ -33,8 +35,7 @@ public class KeyboardSettings : MonoBehaviour
 
     private void Start()
     {
-        SendDataToRemapButton();
-        UpdateKeyDisplay();
+        SendDataToRebindButton();
     }
 
     private void HandleRebindStarted()
@@ -47,44 +48,27 @@ public class KeyboardSettings : MonoBehaviour
         _disableClickBlocker.SetActive(false);
     }
 
-    private void SendDataToRemapButton()
+    private void SendDataToRebindButton()
     {
         for (int i = 0; i < _rebindDatas.Length; i++)
         {
             _rebindDatas[i].RebindButton.Init(
                 _rebindDatas[i].Action, 
                 _rebindDatas[i].BindingIndex,
-                false);
+                _isGamepadSettings);
         }
-    }
-
-    private void UpdateKeyDisplay()
-    {
-        for (int i = 0; i < _rebindDatas.Length; i++)
-        {
-            KeyDisplay(_rebindDatas[i].Action,
-            _rebindDatas[i].BindingIndex,
-            _rebindDatas[i].KeyDisplayText);
-        }
-    } 
-
-    private void KeyDisplay(InputActionReference actionReference, int bindingIndex, Text buttonText)
-    {
-        InputAction action = actionReference.action;
-        buttonText.text = GetBindingPathDisplayName(action.bindings[bindingIndex]);
-    }
-
-    private string GetBindingPathDisplayName(InputBinding binding)
-    {
-        return InputControlPath.ToHumanReadableString(
-        binding.effectivePath,
-        InputControlPath.HumanReadableStringOptions.OmitDevice
-        );
     }
 
     private void RestoreDefaultsClicked()
     {
-        _inputRebindManager.ResetKeyboardSettings();
-        UpdateKeyDisplay();
+        if (_isGamepadSettings == true)
+            _inputRebindManager.ResetControllerSettings();
+        else
+            _inputRebindManager.ResetKeyboardSettings();
+
+        for (int i = 0; i < _rebindDatas.Length; i++)
+        {
+            _rebindDatas[i].RebindButton.DisplayText.text = _inputRebindManager.GetBindingPathDisplayName(_rebindDatas[i].Action.action.bindings[_rebindDatas[i].BindingIndex]);
+        }
     }
 }
