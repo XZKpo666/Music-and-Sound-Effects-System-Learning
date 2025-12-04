@@ -68,7 +68,7 @@ public class InputSettings : MonoBehaviour
 
         for (int i = 0; i < _rebindDatas.Length; i++)
         {
-            _rebindDatas[i].RebindButton.DisplayText.text = _inputRebindManager.GetBindingPathDisplayName(_rebindDatas[i].Action.action.bindings[_rebindDatas[i].BindingIndex]);
+            _rebindDatas[i].RebindButton.UpdateKeyDisplay();
         }
     }
 }

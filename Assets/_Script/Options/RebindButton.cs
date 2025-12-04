@@ -57,7 +57,7 @@ public class RebindButton : MonoBehaviour
         }
     }
 
-    private void UpdateKeyDisplay()
+    public void UpdateKeyDisplay()
     {
         DisplayText.text = _inputRebindManager.GetBindingPathDisplayName(_action.action.bindings[_bindingIndex]);
     }
