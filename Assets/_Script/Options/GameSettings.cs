@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,11 +6,11 @@ public class GameSettings : MonoBehaviour
     [SerializeField]
     private Dropdown _languageDropdown;
 
-    private LocalizationManager _localizationManager;
+    private LanguageChangeManager _localizationManager;
 
     private void Start()
     {
-        _localizationManager = ServiceLocator.Instance.GetService<LocalizationManager>();
+        _localizationManager = ServiceLocator.Instance.GetService<LanguageChangeManager>();
         UpdateSettings();
     }
 

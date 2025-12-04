@@ -19,12 +19,12 @@ MonoBehaviour:
     m_Key: Start_Key
     m_Metadata:
       m_Items: []
-  - m_Id: 86367260672
-    m_Key: Options_Key
-    m_Metadata:
-      m_Items: []
   - m_Id: 88284057600
     m_Key: Quit_Key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 86367260672
+    m_Key: Options_Key
     m_Metadata:
       m_Items: []
   m_Metadata:

@@ -4,9 +4,8 @@ using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
 
-public class LocalizationManager : MonoBehaviour, IGameService
+public class LanguageChangeManager : MonoBehaviour, IGameService
 {
-    [Header("狀態")]
     public int CurrentLanguageIndex;
 
     private void OnEnable()
@@ -16,7 +15,7 @@ public class LocalizationManager : MonoBehaviour, IGameService
 
     private void OnDisable()
     {
-        ServiceLocator.Instance.RemoveService<LocalizationManager>(false);
+        ServiceLocator.Instance.RemoveService<LanguageChangeManager>(false);
     }
 
     private void Start()
@@ -47,27 +46,14 @@ public class LocalizationManager : MonoBehaviour, IGameService
     {
         if(!PlayerPrefs.HasKey("language"))
         {
-            SystemLanguage systemLanguage = Application.systemLanguage;
-            CurrentLanguageIndex = ConvertSystemLanguage(systemLanguage);
+            List<Locale> locales = LocalizationSettings.AvailableLocales.Locales;
+            Locale current = LocalizationSettings.SelectedLocale;             
+            int CurrentLanguageIndex = locales.IndexOf(current);
             TranslateLanguage(CurrentLanguageIndex);
         }
         else
         {
             LoadLanguage();
-        }
-    }
-
-    private int ConvertSystemLanguage(SystemLanguage systemLanguage)
-    {
-        switch (systemLanguage)
-        {
-            case SystemLanguage.Chinese:
-            case SystemLanguage.ChineseTraditional:
-            case SystemLanguage.ChineseSimplified:
-                return 1;
-                    
-            default:
-                return 0;
         }
     }
 }
